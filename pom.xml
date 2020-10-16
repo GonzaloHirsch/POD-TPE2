@@ -13,6 +13,7 @@
     <module>client</module>
   </modules>
   <properties>
+    <hazel.version>3.7.8</hazel.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <slf4j.version>1.7.12</slf4j.version>
   </properties>
@@ -21,7 +22,7 @@
       <dependency>
         <groupId>com.hazelcast</groupId>
         <artifactId>hazelcast-all</artifactId>
-        <version>3.6.5</version>
+        <version>${hazel.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.logging.log4j</groupId>

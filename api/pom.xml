@@ -6,7 +6,6 @@
     <groupId>ar.edu.itba.pod</groupId>
     <version>1.0-SNAPSHOT</version>
   </parent>
-  <groupId>ar.edu.itba.pod</groupId>
   <artifactId>tpe2-g2-api</artifactId>
   <version>1.0-SNAPSHOT</version>
   <name>tpe2-g2-api</name>
