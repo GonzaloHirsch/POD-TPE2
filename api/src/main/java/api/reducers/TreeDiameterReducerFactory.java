@@ -10,7 +10,7 @@ import org.apache.commons.lang3.tuple.Pair;
 public class TreeDiameterReducerFactory implements ReducerFactory<String, Pair<Long, Double>, Double> {
     @Override
     public Reducer<Pair<Long, Double>, Double> newReducer(String s) {
-        return null;
+        return new TreeDiameterReducer();
     }
 
     /**

@@ -16,6 +16,10 @@ public enum Cities {
         this.value = s;
     }
 
+    public String getValue() {
+        return value;
+    }
+
     public static Cities FromValue(String s) throws InvalidArgumentsException {
         s = Optional.ofNullable(s).orElseThrow(() -> new InvalidArgumentsException("Invalid argument for City")).toUpperCase();
         for (Cities c : Cities.values()){

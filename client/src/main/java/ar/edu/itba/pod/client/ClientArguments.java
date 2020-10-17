@@ -23,8 +23,8 @@ public class ClientArguments {
 
     private static final String CITY_KEY = "city";
     private static final String ADDRESSES_KEY = "addresses";
-    private static final String IN_KEY = "in";
-    private static final String OUT_KEY = "out";
+    private static final String IN_KEY = "inPath";
+    private static final String OUT_KEY = "outPath";
     private static final String MIN_KEY = "min";
     private static final String N_KEY = "n";
     private static final String NAME_KEY = "name";
@@ -87,7 +87,7 @@ public class ClientArguments {
 
         // Try to obtain the N parameter
         if (this.query == Queries.QUERY_3) {
-            if (props.containsKey(N_KEY)) {
+            if (!props.containsKey(N_KEY)) {
                 this.printHelp();
                 throw new InvalidArgumentsException("Invalid argument for N");
             } else {
@@ -97,7 +97,7 @@ public class ClientArguments {
 
         // Try to obtain the MIN parameter
         if (this.query == Queries.QUERY_2 || this.query == Queries.QUERY_4){
-            if ( props.containsKey(MIN_KEY)) {
+            if (!props.containsKey(MIN_KEY)) {
                 this.printHelp();
                 throw new InvalidArgumentsException("Invalid argument for Min");
             } else {
@@ -107,7 +107,7 @@ public class ClientArguments {
 
         // Try to obtain the NAME parameter
         if (this.query == Queries.QUERY_4){
-            if (props.containsKey(NAME_KEY)) {
+            if (!props.containsKey(NAME_KEY)) {
                 this.printHelp();
                 throw new InvalidArgumentsException("Invalid argument for Name");
             } else {
