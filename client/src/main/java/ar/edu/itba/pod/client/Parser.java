@@ -1,5 +1,6 @@
 package ar.edu.itba.pod.client;
 
+import api.TreeRecord;
 import ar.edu.itba.pod.client.enums.Cities;
 
 import java.io.File;
