@@ -1,6 +1,10 @@
 package api;
 
-public class TreeRecord {
+import java.io.Serializable;
+
+public class TreeRecord implements Serializable {
+    private static final long serialVersionUID = 1920965438822291259L;
+
     private final String neighbourhoodName;
     private final String street;
     private final String commonName;
