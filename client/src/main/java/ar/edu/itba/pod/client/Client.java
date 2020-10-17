@@ -1,17 +1,12 @@
 package ar.edu.itba.pod.client;
 
-import api.combiners.TreeDiameterCombinerFactory;
-import api.mappers.TreeDiameterMapper;
-import api.reducers.TreeDiameterReducerFactory;
 import ar.edu.itba.pod.client.enums.Queries;
 import ar.edu.itba.pod.client.exceptions.InvalidArgumentsException;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.client.config.ClientNetworkConfig;
 import com.hazelcast.config.GroupConfig;
-import com.hazelcast.config.NetworkConfig;
 import com.hazelcast.core.HazelcastInstance;
-import com.hazelcast.core.ICompletableFuture;
 import com.hazelcast.core.IList;
 import com.hazelcast.mapreduce.Job;
 import com.hazelcast.mapreduce.JobTracker;
@@ -19,12 +14,9 @@ import com.hazelcast.mapreduce.KeyValueSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.MalformedURLException;
-import java.rmi.Naming;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
+import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -48,9 +40,11 @@ public class Client {
             // Creating an instance of the Hazelcast Client
             final HazelcastInstance hz = GetHazelInstance(arguments.getAddresses());
 
-            // TODO: PARSEAR ARCHIVOS DE ENTRADA ACA
-            // TODO: USAR LOS PARAMETROS in Y cities PARA HACER PARSEOS
-
+            // File parsing to get both neighbours and tree records information
+            Parser parser = new Parser(arguments.getCity(), arguments.getInPath());
+            parser.parse();
+            Map<String, Long> neighbours = parser.getNeighbours();
+            List<TreeRecord> treeRecords = parser.getTreeRecords();
 
             // TODO: TODA LA LOGICA VA ACA
             // TODO: AGREGAR CODIGO POR QUERY
@@ -68,6 +62,8 @@ public class Client {
                 case QUERY_5:
                     break;
             }
+        } catch (IOException e) {
+            System.out.println("ERROR: There was a problem while parsing files");
         } catch (Exception e) {
             // FIXME: BETTER ERRORS HERE
             System.out.println("ERROR: Exception in the server");
