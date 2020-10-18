@@ -92,6 +92,10 @@ public class ClientArguments {
                 throw new InvalidArgumentsException("Invalid argument for N");
             } else {
                 this.n = Integer.parseInt(props.getProperty(N_KEY));
+                if (this.n <= 0){
+                    this.printHelp();
+                    throw new InvalidArgumentsException("Invalid argument for N");
+                }
             }
         }
 
@@ -120,13 +124,16 @@ public class ClientArguments {
      * Method to print the help for the management client
      */
     private void printHelp() {
-        // FIXME: WRITE BETTER HELP WITH ACTUAL PARAMETERS
         System.out.println("This program should be run as follows:\n" +
-                "$>./run-client -DserverAddress=xx.xx.xx.xx:yyyy -Did=pollingPlaceNumber -Dparty=partyName\n" +
+                "$>./queryX -Dcity=[BUE|VAN] -Daddresses='xx.xx.xx.xx:yyyy;xx.xx.xx.xx:yyyy' -DinPath=. -DoutPath=. -Dn=5 -Dmin=100 -Dname='Fraxinus pennsylvanica'\n" +
                 "Where: \n" +
-                " - DserverAddress is xx.xx.xx.xx:yyyy with xx.xx.xx.xx is the server address and yyyy the port of the server\n" +
-                " - Did is the id of the polling station the audit officer will be registered to\n" +
-                " - Dparty is the party which the audit officer belongs to");
+                " - Dcity is the city to be used, BUE or VAN \n" +
+                " - Daddresses is xx.xx.xx.xx:yyyy with xx.xx.xx.xx is the server address and yyyy the port of the server, there can be multiple addresses and ports sepparated by ;\n" +
+                " - DinPath is the path to the directory where input files are\n" +
+                " - DoutPath is the path to the output file to be used\n" +
+                " - Dn is the maximum number of results to show (QUERY 3)\n" +
+                " - Dmin is the minimum amount to take into account (QUERY 4 and QUERY 2)\n" +
+                " - Dname is the species name to filter by (QUERY 4)\n");
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
