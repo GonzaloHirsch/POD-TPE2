@@ -49,8 +49,28 @@ The condensed command is:
 cd client/target/ && tar -xzf tpe2-g2-client-1.0-SNAPSHOT-bin.tar.gz && cd tpe2-g2-client-1.0-SNAPSHOT && chmod u+x $(ls | egrep query)
 ```
 
+#### Query 1
+To run the query 1, the following command is used:
+```
+```
+
+#### Query 2
+To run the query 2, the following command is used:
+```
+```
+
 #### Query 3
 To run the query 3, the following command is used:
 ```
 ./query3.sh -Dcity=BUE -Daddresses='192.168.1.192:5701' -DinPath=. -DoutPath=. -Dn=3
+```
+
+#### Query 4
+To run the query 4, the following command is used:
+```
+```
+
+#### Query 5
+To run the query 5, the following command is used:
+```
 ```
