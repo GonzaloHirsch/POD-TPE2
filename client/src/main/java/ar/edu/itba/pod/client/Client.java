@@ -1,36 +1,30 @@
 package ar.edu.itba.pod.client;
 
 import api.TreeRecord;
-import api.combiners.TreeDiameterCombinerFactory;
-import api.mappers.TreeDiameterMapper;
-import api.reducers.TreeDiameterReducerFactory;
-import ar.edu.itba.pod.client.enums.Cities;
 import ar.edu.itba.pod.client.enums.Queries;
 import ar.edu.itba.pod.client.exceptions.InvalidArgumentsException;
+import ar.edu.itba.pod.client.queries.Query;
+import ar.edu.itba.pod.client.queries.Query3;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.client.config.ClientNetworkConfig;
 import com.hazelcast.config.GroupConfig;
 import com.hazelcast.core.HazelcastInstance;
-import com.hazelcast.core.ICompletableFuture;
-import com.hazelcast.core.IList;
-import com.hazelcast.mapreduce.Job;
-import com.hazelcast.mapreduce.JobTracker;
-import com.hazelcast.mapreduce.KeyValueSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.*;
-import java.util.concurrent.ExecutionException;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public class Client {
     private static Logger LOG = LoggerFactory.getLogger(Client.class);
+
+    // CLUSTER CONSTANTS
     private static final String NAME = "tpe2-g2";
     private static final String PASSWORD = "nuestra_password";
-
-    private static final String QUERY_3_JOB = "QUERY_3";
-    private static final String TREE_RECORD_LIST = "TREE_LIST_";
 
     public static void main(String[] args) {
         try {
@@ -56,6 +50,8 @@ public class Client {
             // TODO: TODA LA LOGICA VA ACA
             // TODO: AGREGAR CODIGO POR QUERY
             // TODO: SE PUEDEN HACER FUNCIONES QUE RECIBAN LOS PARAMETROS DE ARGUMENTS Y EL CLIENTE DE HAZELCAST
+            // Query to be executed
+            Optional<Query> optionalQuery = Optional.empty();
             Queries chosenQuery = arguments.getQuery();
             switch (chosenQuery) {
                 case QUERY_1:
@@ -63,13 +59,16 @@ public class Client {
                 case QUERY_2:
                     break;
                 case QUERY_3:
-                    performQuery3(hz, arguments.getCity(), arguments.getN());
+                    optionalQuery = Optional.of(new Query3(hz, arguments.getOutPath(), arguments.getCity(), arguments.getN()));
                     break;
                 case QUERY_4:
                     break;
                 case QUERY_5:
                     break;
             }
+
+            // Executing the query
+            optionalQuery.orElseThrow(() -> new IllegalStateException("No query to perform")).executeQuery();
 
             // Exit the program, we need this because it keeps the hazelcast connection open otherwise
             System.exit(0);
@@ -102,57 +101,5 @@ public class Client {
         memberIPs.forEach(networkConfig::addAddress);
 
         return HazelcastClient.newHazelcastClient(config);
-    }
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    //                                          QUERIES
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-
-    private static void performQuery3(HazelcastInstance hz, Cities city, int n) throws ExecutionException, InterruptedException {
-        // Getting the job tracker
-        JobTracker jobTracker = hz.getJobTracker(QUERY_3_JOB);
-
-        // Get the list from hazelcast, we construct the name of the record based on the city name
-        final IList<TreeRecord> list = hz.getList(TREE_RECORD_LIST + city.getValue());
-        TreeRecord tr1 = new TreeRecord("Hola", "calle falsa", "mi arbolito", 10);
-        TreeRecord tr2 = new TreeRecord("Hola", "calle falsa", "mi arbolito 1", 20);
-        TreeRecord tr3 = new TreeRecord("Hola", "calle falsa", "mi arbolito 1", 40);
-        TreeRecord tr4 = new TreeRecord("Hola", "calle falsa", "mi arbolito", 15);
-        TreeRecord tr5 = new TreeRecord("Hola", "calle falsa", "mi arbolito 2", 30);
-        list.addAll(Arrays.asList(tr1, tr2, tr3, tr4, tr5));
-
-        // Get the source for the job
-        final KeyValueSource<String, TreeRecord> source = KeyValueSource.fromList(list);
-
-        // Creating the job with the source
-        Job<String, TreeRecord> job = jobTracker.newJob(source);
-
-        // Setting up the job
-        ICompletableFuture<Map<String, Double>> futureJob = job
-                .mapper(new TreeDiameterMapper())
-                .combiner(new TreeDiameterCombinerFactory())
-                .reducer(new TreeDiameterReducerFactory())
-                .submit();
-
-        // Wait and retrieve the result
-        Map<String, Double> result = futureJob.get();
-
-        // TreeSet to get ordered results, first descending by diameter, then by alphabetic name
-        TreeSet<Map.Entry<String, Double>> orderedResults = new TreeSet<>((o1, o2) -> {
-            int res = o2.getValue().compareTo(o1.getValue());
-            return res == 0 ? o1.getKey().compareTo(o2.getKey()) : res;
-        });
-        orderedResults.addAll(result.entrySet());
-
-        // Keeping the first n results, we use an iterator for this
-        List<Map.Entry<String, Double>> firstNResults = new ArrayList<>(n);
-        Iterator<Map.Entry<String, Double>> iterator = orderedResults.iterator();
-        int count = 0;
-        while (count < n && iterator.hasNext()){
-            firstNResults.add(iterator.next());
-            count++;
-        }
-
-        LOG.info("THE RESULT IS {}", firstNResults);
     }
 }
