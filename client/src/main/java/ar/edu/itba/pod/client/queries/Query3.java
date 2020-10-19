@@ -156,7 +156,7 @@ public class Query3 implements Query{
             myWriter.write(value);
             myWriter.close();
         } catch (IOException e) {
-            System.out.println("An error occurred when writing the election results to " + filename);
+            System.out.println("An error occurred when writing query 3 to " + filename);
         }
     }
 }

@@ -5,6 +5,7 @@ import ar.edu.itba.pod.client.enums.Queries;
 import ar.edu.itba.pod.client.exceptions.InvalidArgumentsException;
 import ar.edu.itba.pod.client.queries.Query;
 import ar.edu.itba.pod.client.queries.Query3;
+import ar.edu.itba.pod.client.queries.Query5;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.client.config.ClientNetworkConfig;
@@ -64,6 +65,7 @@ public class Client {
                 case QUERY_4:
                     break;
                 case QUERY_5:
+                    optionalQuery = Optional.of(new Query5(hz, arguments.getOutPath(), arguments.getCity()));
                     break;
             }
 

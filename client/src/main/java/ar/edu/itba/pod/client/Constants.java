@@ -10,4 +10,5 @@ public final class Constants {
 
     // STRUCTURES CONSTANTS
     public static final String TREE_RECORD_LIST = "TREE_LIST_";
+    public static final String NEIGHBOURHOOD_TREE_COUNT_MAP = "NEIGH_TREE_MAP_";
 }

@@ -77,9 +77,8 @@ fabric.properties
 server/target/
 api/target/
 client/target/
-
 *.class
-
 examples/
+data_files/
 
 .DS_Store

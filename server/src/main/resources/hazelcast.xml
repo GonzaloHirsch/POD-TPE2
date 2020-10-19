@@ -44,9 +44,9 @@
                 <multicast-port>54327</multicast-port>
             </multicast>
             <tcp-ip enabled="true">
-                <interface>192.168.1.192</interface>
+                <interface>192.168.1.95</interface>
                 <member-list>
-                    <member>192.168.1.192</member>
+                    <member>192.168.1.95</member>
                 </member-list>
             </tcp-ip>
             <aws enabled="false">
@@ -63,7 +63,7 @@
             </aws>
         </join>
         <interfaces enabled="true">
-            <interface>192.168.1.192</interface>
+            <interface>192.168.1.95</interface>
         </interfaces>
         <ssl enabled="false"/>
         <socket-interceptor enabled="false"/>
