@@ -71,9 +71,6 @@ public class Client {
 
             // Executing the query
             optionalQuery.orElseThrow(() -> new IllegalStateException("No query to perform")).executeQuery();
-
-            // Exit the program, we need this because it keeps the hazelcast connection open otherwise
-            System.exit(0);
         } catch (IOException e) {
             System.out.println("ERROR: There was a problem while parsing files");
         } catch (IllegalStateException e) {
@@ -82,6 +79,9 @@ public class Client {
             // FIXME: BETTER ERRORS HERE
             System.out.println("ERROR: Exception in the server");
         }
+
+        // Exit the program, we need this because it keeps the hazelcast connection open otherwise
+        System.exit(0);
     }
 
     /**
