@@ -4,7 +4,6 @@ import api.TreeRecord;
 import api.combiners.TreeDiameterCombinerFactory;
 import api.mappers.TreeDiameterMapper;
 import api.reducers.TreeDiameterReducerFactory;
-import ar.edu.itba.pod.client.Client;
 import ar.edu.itba.pod.client.Constants;
 import ar.edu.itba.pod.client.enums.Cities;
 import com.hazelcast.core.HazelcastInstance;
@@ -13,17 +12,11 @@ import com.hazelcast.core.IList;
 import com.hazelcast.mapreduce.Job;
 import com.hazelcast.mapreduce.JobTracker;
 import com.hazelcast.mapreduce.KeyValueSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
-public class Query3 implements Query{
-    private static final Logger LOG = LoggerFactory.getLogger(Client.class);
-
+public class Query3 extends Query{
     // Query properties and variables
     private final HazelcastInstance hz;
     private final Cities city;
@@ -56,6 +49,9 @@ public class Query3 implements Query{
 
     @Override
     public void executeQuery() throws ExecutionException, InterruptedException {
+        // Logging start time of the job
+        this.logStartTime();
+
         // Generating the mapreduce job
         ICompletableFuture<Map<String, Double>> futureJob = this.generateJob();
 
@@ -70,6 +66,9 @@ public class Query3 implements Query{
 
         // Writing the results in the output file
         this.write(this.outputFile, infoForFile);
+
+        // Logging end time of the job
+        this.logEndTime();
     }
 
 
@@ -87,12 +86,6 @@ public class Query3 implements Query{
 
         // Get the list from hazelcast, we construct the name of the record based on the city name
         final IList<TreeRecord> list = this.hz.getList(Constants.TREE_RECORD_LIST + this.city.getValue());
-        TreeRecord tr1 = new TreeRecord("Hola", "calle falsa", "mi arbolito", 10);
-        TreeRecord tr2 = new TreeRecord("Hola", "calle falsa", "mi arbolito 1", 20);
-        TreeRecord tr3 = new TreeRecord("Hola", "calle falsa", "mi arbolito 1", 40);
-        TreeRecord tr4 = new TreeRecord("Hola", "calle falsa", "mi arbolito", 15);
-        TreeRecord tr5 = new TreeRecord("Hola", "calle falsa", "mi arbolito 2", 30);
-        list.addAll(Arrays.asList(tr1, tr2, tr3, tr4, tr5));
 
         // Get the source for the job
         final KeyValueSource<String, TreeRecord> source = KeyValueSource.fromList(list);
@@ -143,20 +136,5 @@ public class Query3 implements Query{
         // Adding the data
         results.forEach(r -> sb.append(r.getKey()).append(";").append(String.format(Locale.ENGLISH, "%.2f\n", r.getValue())));
         return sb.toString();
-    }
-
-    /**
-     * Writes a given value into a filename location(can be a path)
-     * @param filename path to the output file
-     * @param value value to be written to the file
-     */
-    private void write(String filename, String value) {
-        try {
-            FileWriter myWriter = new FileWriter(filename);
-            myWriter.write(value);
-            myWriter.close();
-        } catch (IOException e) {
-            System.out.println("An error occurred when writing query 3 to " + filename);
-        }
     }
 }

@@ -28,7 +28,7 @@ import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
-public class Query5 implements Query {
+public class Query5 extends Query {
     private static final Logger LOG = LoggerFactory.getLogger(Client.class);
 
     // Query properties and variables
@@ -97,7 +97,7 @@ public class Query5 implements Query {
         // Get the list from hazelcast, we construct the name of the record based on the city name
         final IList<TreeRecord> list = this.hz.getList(Constants.TREE_RECORD_LIST + this.city.getValue());
 
-        // TODO Delete this once parser is done correctly
+/*        // TODO Delete this once parser is done correctly
         TreeRecord tr1 = new TreeRecord("Hola", "calle falsa", "mi arbolito", 10);
         TreeRecord tr2 = new TreeRecord("Hola", "calle falsa", "mi arbolito 1", 20);
         TreeRecord tr3 = new TreeRecord("Hola", "calle falsa", "mi arbolito 1", 40);
@@ -111,7 +111,7 @@ public class Query5 implements Query {
             TreeRecord b3 = new TreeRecord("Barrio 3", "calle falsa", "mi arbolito", 10);
             TreeRecord b4 = new TreeRecord("Barrio 4", "calle falsa", "mi arbolito", 10);
             list.addAll(Arrays.asList(b1, b2, b2, b3, b2, b4, b1, b1));
-        }
+        }*/
 
         // Get the source for the job
         final KeyValueSource<String, TreeRecord> source = KeyValueSource.fromList(list);
@@ -199,20 +199,5 @@ public class Query5 implements Query {
             }
         }
         return sb;
-    }
-
-    /**
-     * Writes a given value into a filename location(can be a path)
-     * @param filename path to the output file
-     * @param value value to be written to the file
-     */
-    private void write(String filename, String value) {
-        try {
-            FileWriter myWriter = new FileWriter(filename);
-            myWriter.write(value);
-            myWriter.close();
-        } catch (IOException e) {
-            System.out.println("An error occurred when writing query 5 to " + filename);
-        }
     }
 }

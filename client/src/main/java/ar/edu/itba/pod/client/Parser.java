@@ -32,7 +32,6 @@ public class Parser {
     private int COMMON_NAME_ID;
     private int DIAMETER_ID;
 
-
     public Parser(Cities city, String inPath) {
         this.city = city;
         this.neighboursPath = inPath.concat("barrios").concat(city.name()).concat(EXTENSION);
@@ -44,9 +43,7 @@ public class Parser {
     parse both neighbours file and tree records file. We can access to the
     information through getters for both neighbours mao and tree records list.
     * */
-    public void parse() throws  IOException {
-        System.out.println(this.neighboursPath);
-        System.out.println(this.treeRecordsPath);
+    public void parse() throws IOException {
         parseNeighbourhoods();
         parseTreeRecords();
     }
@@ -90,7 +87,7 @@ public class Parser {
 
         String[] treeRecordElements;
 
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             treeRecordElements = iterator.next().trim().split(";");
             treeRecords.add(new TreeRecord(
                     treeRecordElements[NEIGHBOURHOOD_NAME_ID], treeRecordElements[STREET_ID],
@@ -103,42 +100,44 @@ public class Parser {
         Iterator<String> iterator = headers.iterator();
         String header;
         int search = 0;
-        while(iterator.hasNext() && search < 4) {
+        while (iterator.hasNext() && search < 4) {
             header = iterator.next();
             search = findHeader(search, header, headers);
         }
     }
 
     /*
-    * This method is necessary since needed headers are not always at the same indexes
-    * */
+     * This method is necessary since needed headers are not always at the same indexes
+     * */
     private int findHeader(int search, String header, List<String> headers) {
-        switch(search) {
+        switch (search) {
             case 0: { // case of neighbourhood
-                if(neighbourhoodHeader.contains(header)) {
+                if (neighbourhoodHeader.contains(header)) {
                     NEIGHBOURHOOD_NAME_ID = headers.indexOf(header);
-                    return search+1;
+                    return search + 1;
                 }
             }
             case 1: { // case of street
-                if(streetHeader.contains(header)) {
+                if (streetHeader.contains(header)) {
                     STREET_ID = headers.indexOf(header);
-                    return search+1;
+                    return search + 1;
                 }
             }
             case 2: { // case of common name
-                if(commonNameHeader.contains(header)) {
+                if (commonNameHeader.contains(header)) {
                     COMMON_NAME_ID = headers.indexOf(header);
-                    return search+1;
+                    return search + 1;
                 }
             }
             case 3: { // case of diameter
-                if(diameterHeader.contains(header)) {
+                if (diameterHeader.contains(header)) {
                     DIAMETER_ID = headers.indexOf(header);
-                    return search+1;
-                };
+                    return search + 1;
+                }
+                ;
             }
-            default: return search;
+            default:
+                return search;
         }
     }
 }

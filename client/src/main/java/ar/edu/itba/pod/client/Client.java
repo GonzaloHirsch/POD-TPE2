@@ -1,6 +1,7 @@
 package ar.edu.itba.pod.client;
 
 import api.TreeRecord;
+import ar.edu.itba.pod.client.enums.Cities;
 import ar.edu.itba.pod.client.enums.Queries;
 import ar.edu.itba.pod.client.exceptions.InvalidArgumentsException;
 import ar.edu.itba.pod.client.queries.Query;
@@ -11,6 +12,8 @@ import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.client.config.ClientNetworkConfig;
 import com.hazelcast.config.GroupConfig;
 import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.core.IList;
+import com.hazelcast.core.IMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +27,7 @@ public class Client {
     private static Logger LOG = LoggerFactory.getLogger(Client.class);
 
     // CLUSTER CONSTANTS
-    private static final String NAME = "tpe2-g2";
+    private static final String NAME = "g2";
     private static final String PASSWORD = "nuestra_password";
 
     public static void main(String[] args) {
@@ -42,11 +45,8 @@ public class Client {
             // Creating an instance of the Hazelcast Client
             final HazelcastInstance hz = GetHazelInstance(arguments.getAddresses());
 
-            // File parsing to get both neighbours and tree records information
-            Parser parser = new Parser(arguments.getCity(), arguments.getInPath());
-            parser.parse();
-            Map<String, Long> neighbours = parser.getNeighbours();
-            List<TreeRecord> treeRecords = parser.getTreeRecords();
+            // Parsing the input files and populating the hazelcast structures
+            ParseAndPopulateStructures(hz, arguments.getCity(), arguments.getInPath());
 
             // TODO: TODA LA LOGICA VA ACA
             // TODO: AGREGAR CODIGO POR QUERY
@@ -76,6 +76,8 @@ public class Client {
             System.exit(0);
         } catch (IOException e) {
             System.out.println("ERROR: There was a problem while parsing files");
+        } catch (IllegalStateException e) {
+            System.out.println("No query chosen to be performed");
         } catch (Exception e) {
             // FIXME: BETTER ERRORS HERE
             System.out.println("ERROR: Exception in the server");
@@ -103,5 +105,34 @@ public class Client {
         memberIPs.forEach(networkConfig::addAddress);
 
         return HazelcastClient.newHazelcastClient(config);
+    }
+
+    /**
+     * Parses the input files and populates the hazelcast structures with the parsed information
+     * @param hz Instance of the hazelcast client
+     * @param city City chosen to be analyzed
+     * @param inPath Path to the folder containing the input files
+     * @throws IOException if there is an error parsing the files
+     */
+    private static void ParseAndPopulateStructures(HazelcastInstance hz, Cities city, String inPath) throws IOException {
+        // Logging start time of parsing
+        LOG.info("Inicio de la lectura del archivo");
+
+        // File parsing to get both neighbours and tree records information
+        Parser parser = new Parser(city, inPath);
+        parser.parse();
+
+        // Logging end time of parsing
+        LOG.info("Fin de lectura del archivo");
+
+        // Getting both structures from hazelcast
+        final IList<TreeRecord> treeRecordList = hz.getList(Constants.TREE_RECORD_LIST + city.getValue());
+        final IMap<String, Long> neighbourhoodsMap = hz.getMap(Constants.NEIGHBOURHOOD_TREE_COUNT_MAP + city.getValue());
+
+        // Populating the tree records
+        treeRecordList.addAll(parser.getTreeRecords());
+
+        // Populating the neighbourhoods
+        neighbourhoodsMap.putAll(parser.getNeighbours());
     }
 }
