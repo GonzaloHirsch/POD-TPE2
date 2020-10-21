@@ -44,7 +44,8 @@ public class Query5 extends Query {
     // Comparator used to compare the Map.Entry objects with the Map-Reduce results
     // First comparison is made by value, in descending order
     // Second comparison is in alphabetic order
-    private static final Comparator<Map.Entry<Integer, TreeSet<String>>> ENTRY_COMPARATOR = Comparator.comparing(Map.Entry::getKey);
+//    private static final Comparator<Map.Entry<Long, TreeSet<String>>> ENTRY_COMPARATOR =  Comparator.reverseOrder().comparing(Map.Entry::getKey);
+    private static final Comparator<Map.Entry<Long, TreeSet<String>>> ENTRY_COMPARATOR = (o1, o2) -> o2.getKey().compareTo(o1.getKey());
 
     public Query5(HazelcastInstance hz, String outputFile, Cities city){
         this.hz = hz;
@@ -66,13 +67,13 @@ public class Query5 extends Query {
         Map<String, Integer> treePerNeighbourhoodResult = futureTreeCountJob.get();
 
         // Generating the second mapreduce job
-        ICompletableFuture<Map<Integer, TreeSet<String>>> futureFinalJob = this.generateTreeNeighbourhoodPairJob(treePerNeighbourhoodResult);
+        ICompletableFuture<Map<Long, TreeSet<String>>> futureFinalJob = this.generateTreeNeighbourhoodPairJob(treePerNeighbourhoodResult);
 
         // Wait and retrieve the result
-        Map<Integer, TreeSet<String>> treeNeighbourhoodPairResults = futureFinalJob.get();
+        Map<Long, TreeSet<String>> treeNeighbourhoodPairResults = futureFinalJob.get();
 
         // Order results by tree amount
-        TreeSet<Map.Entry<Integer, TreeSet<String>>> sortedResults = this.sortResults(treeNeighbourhoodPairResults);
+        TreeSet<Map.Entry<Long, TreeSet<String>>> sortedResults = this.sortResults(treeNeighbourhoodPairResults);
 
         // Generate the output string
         String infoForFile = this.prepareOutput(sortedResults);
@@ -131,21 +132,21 @@ public class Query5 extends Query {
      * Generates a Map-Reduce job for the query to be executed
      * @return the ICompletableFuture object to be waited asynchronously or synchronously
      */
-    private ICompletableFuture<Map<Integer, TreeSet<String>>> generateTreeNeighbourhoodPairJob(Map<String, Integer> treePerNeighbourhoodResult) {
+    private ICompletableFuture<Map<Long, TreeSet<String>>> generateTreeNeighbourhoodPairJob(Map<String, Integer> treePerNeighbourhoodResult) {
         // Getting the job tracker
         JobTracker jobTracker = this.hz.getJobTracker(QUERY_5_SECOND_JOB);
 
         // Passing the Map of the first MapReduce to IMap to use as source for next MapReduce
-        IMap<String, Integer> map = this.hz.getMap(Constants.NEIGHBOURHOOD_TREE_COUNT_MAP + this.city.getValue());
+        IMap<String, Long> map = this.hz.getMap(Constants.NEIGHBOURHOOD_TREE_COUNT_MAP + this.city.getValue());
         for (Map.Entry<String, Integer> entry: treePerNeighbourhoodResult.entrySet()) {
-            map.put(entry.getKey(), entry.getValue());
+            map.put(entry.getKey(), entry.getValue().longValue());
         }
 
         // Get the source for the job
-        final KeyValueSource<String, Integer> source = KeyValueSource.fromMap(map);
+        final KeyValueSource<String, Long> source = KeyValueSource.fromMap(map);
 
         // Creating the job with the source
-        Job<String, Integer> job = jobTracker.newJob(source);
+        Job<String, Long> job = jobTracker.newJob(source);
 
         // Setting up the job
         return job
@@ -159,9 +160,9 @@ public class Query5 extends Query {
      * @param result Map with the results of the Map-Reduce jobs
      * @return a sorted list of map entries with the information to be written in the output file
      */
-    private TreeSet<Map.Entry<Integer, TreeSet<String>>> sortResults(Map<Integer, TreeSet<String>> result){
+    private TreeSet<Map.Entry<Long, TreeSet<String>>> sortResults(Map<Long, TreeSet<String>> result){
         // TreeSet to order by tree amount
-        TreeSet<Map.Entry<Integer, TreeSet<String>>> orderedResults = new TreeSet<>(ENTRY_COMPARATOR);
+        TreeSet<Map.Entry<Long, TreeSet<String>>> orderedResults = new TreeSet<>(ENTRY_COMPARATOR);
         orderedResults.addAll(result.entrySet());
         return orderedResults;
     }
@@ -171,7 +172,7 @@ public class Query5 extends Query {
      * @param results List with Map.Entry objects
      * @return a String with the information to be written in the output file
      */
-    private String prepareOutput(TreeSet<Map.Entry<Integer, TreeSet<String>>> results){
+    private String prepareOutput(TreeSet<Map.Entry<Long, TreeSet<String>>> results){
         // We build the string with a string builder
         StringBuilder sb = new StringBuilder();
         // Adding a header
@@ -185,7 +186,7 @@ public class Query5 extends Query {
      * @param pair Map.Entry of the key value to format into a string
      * @return a String with the information of the pair
      */
-    private StringBuilder formatKeyValuePair(Map.Entry<Integer, TreeSet<String>> pair) {
+    private StringBuilder formatKeyValuePair(Map.Entry<Long, TreeSet<String>> pair) {
         List<String> neighbourhoods = new ArrayList<>(pair.getValue());
         int size = neighbourhoods.size();
         StringBuilder sb = new StringBuilder();
