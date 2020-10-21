@@ -1,16 +1,21 @@
 package api;
 
-import java.io.Serializable;
+import com.hazelcast.nio.ObjectDataInput;
+import com.hazelcast.nio.ObjectDataOutput;
+import com.hazelcast.nio.serialization.DataSerializable;
 
-public class TreeRecord implements Serializable {
-    private static final long serialVersionUID = 1920965438822291259L;
+import java.io.IOException;
 
-    private final String neighbourhoodName;
-    private final String street;
-    private final String commonName;
-    private final double diameter;
+public class TreeRecord implements DataSerializable {
+
+    private String neighbourhoodName;
+    private String street;
+    private String commonName;
+    private double diameter;
 
     private final static char delimiter = ';';
+
+    public TreeRecord() {}
 
     public TreeRecord(String neighbourhoodName, String street, String commonName, double diameter) {
         this.neighbourhoodName = neighbourhoodName;
@@ -37,14 +42,28 @@ public class TreeRecord implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append(neighbourhoodName);
-        builder.append(delimiter);
-        builder.append(street);
-        builder.append(delimiter);
-        builder.append(commonName);
-        builder.append(delimiter);
-        builder.append(diameter);
-        return builder.toString();
+        return neighbourhoodName +
+                delimiter +
+                street +
+                delimiter +
+                commonName +
+                delimiter +
+                diameter;
+    }
+
+    @Override
+    public void writeData(ObjectDataOutput objectDataOutput) throws IOException {
+        objectDataOutput.writeUTF(neighbourhoodName);
+        objectDataOutput.writeUTF(street);
+        objectDataOutput.writeUTF(commonName);
+        objectDataOutput.writeDouble(diameter);
+    }
+
+    @Override
+    public void readData(ObjectDataInput objectDataInput) throws IOException {
+        neighbourhoodName = objectDataInput.readUTF();
+        street = objectDataInput.readUTF();
+        commonName = objectDataInput.readUTF();
+        diameter = objectDataInput.readDouble();
     }
 }

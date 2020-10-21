@@ -76,7 +76,7 @@ public class Client {
         } catch (IllegalStateException e) {
             System.out.println("No query chosen to be performed");
         } catch (Exception e) {
-            // FIXME: BETTER ERRORS HERE
+            e.printStackTrace();
             System.out.println("ERROR: Exception in the server");
         }
 
