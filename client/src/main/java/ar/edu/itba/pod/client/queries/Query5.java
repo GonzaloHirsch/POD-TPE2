@@ -18,7 +18,7 @@ import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
 
-public class Query5 extends GenericQuery<Long, TreeSet<String>> {
+public class Query5 extends GenericQuery<Integer, TreeSet<String>> {
 
     // Constants to be used
     private static final String QUERY_5_FIRST_JOB = "FIRST_QUERY_5";
@@ -26,7 +26,7 @@ public class Query5 extends GenericQuery<Long, TreeSet<String>> {
     private static final String OUTPUT_HEADER = "Grupo;Barrio A;Barrio B\n";
 
     // This function transforms results' entries into strings
-    private static final Function<Map.Entry<Long, TreeSet<String>>, String> RESULT_TO_STRING = r -> {
+    private static final Function<Map.Entry<Integer, TreeSet<String>>, String> RESULT_TO_STRING = r -> {
         List<String> neighbourhoods = new ArrayList<>(r.getValue());
         int size = neighbourhoods.size();
         StringBuilder sb = new StringBuilder();
@@ -47,7 +47,7 @@ public class Query5 extends GenericQuery<Long, TreeSet<String>> {
     }
 
     @Override
-    protected ICompletableFuture<List<Map.Entry<Long, TreeSet<String>>>> submitJob() throws ExecutionException, InterruptedException {
+    protected ICompletableFuture<List<Map.Entry<Integer, TreeSet<String>>>> submitJob() throws ExecutionException, InterruptedException {
         Job<String, TreeRecord> firstJob = this.generateJobFromList(QUERY_5_FIRST_JOB);
 
         // submitting first job
@@ -60,13 +60,13 @@ public class Query5 extends GenericQuery<Long, TreeSet<String>> {
         // intermediate result
         Map<String, Integer> treePerNeighbourhoodResult = futureJob.get();
 
-        final IMap<String, Long> hzMap = this.hz.getMap(Constants.NEIGHBOURHOOD_TREE_COUNT_MAP + this.city.getValue());
+        final IMap<String, Integer> hzMap = this.hz.getMap(Constants.NEIGHBOURHOOD_TREE_COUNT_MAP + this.city.getValue());
         // adds data to Hazelcast IMap
         for (Map.Entry<String, Integer> r : treePerNeighbourhoodResult.entrySet()) {
-            hzMap.put(r.getKey(), new Long(r.getValue()));
+            hzMap.put(r.getKey(), r.getValue());
         }
 
-        Job<String, Long> secondJob = this.generateJobFromMap(QUERY_5_SECOND_JOB);
+        Job<String, Integer> secondJob = this.generateJobFromMap(QUERY_5_SECOND_JOB);
 
         // submitting final job
         return secondJob

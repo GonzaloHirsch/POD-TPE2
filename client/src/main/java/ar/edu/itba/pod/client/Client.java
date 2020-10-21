@@ -4,10 +4,7 @@ import api.TreeRecord;
 import ar.edu.itba.pod.client.enums.Cities;
 import ar.edu.itba.pod.client.enums.Queries;
 import ar.edu.itba.pod.client.exceptions.InvalidArgumentsException;
-import ar.edu.itba.pod.client.queries.Query;
-import ar.edu.itba.pod.client.queries.Query2;
-import ar.edu.itba.pod.client.queries.Query3;
-import ar.edu.itba.pod.client.queries.Query5;
+import ar.edu.itba.pod.client.queries.*;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.client.config.ClientNetworkConfig;
@@ -47,12 +44,11 @@ public class Client {
             // Parsing the input files and populating the hazelcast structures
             ParseAndPopulateStructures(hz, arguments.getCity(), arguments.getInPath());
 
-
             // TODO: TODA LA LOGICA VA ACA
             // TODO: AGREGAR CODIGO POR QUERY
             // TODO: SE PUEDEN HACER FUNCIONES QUE RECIBAN LOS PARAMETROS DE ARGUMENTS Y EL CLIENTE DE HAZELCAST
             // Query to be executed
-            Optional<Query> optionalQuery = Optional.empty();
+            Optional<GenericQuery> optionalQuery = Optional.empty();
             Queries chosenQuery = arguments.getQuery();
             switch (chosenQuery) {
                 case QUERY_1:

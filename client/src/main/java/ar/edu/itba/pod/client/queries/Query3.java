@@ -14,8 +14,7 @@ import java.util.*;
 import java.util.function.Function;
 
 public class Query3 extends GenericQuery<String, Double> {
-
-    private int n;
+    private final int n;
 
     // Constants to be used
     private static final String QUERY_3_JOB = "QUERY_3";

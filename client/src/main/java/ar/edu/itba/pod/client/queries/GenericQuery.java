@@ -11,12 +11,17 @@ import com.hazelcast.mapreduce.Job;
 import com.hazelcast.mapreduce.JobTracker;
 import com.hazelcast.mapreduce.KeyValueSource;
 import org.apache.commons.lang3.NotImplementedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
 
-public class GenericQuery<K, V> extends Query{
+public abstract class GenericQuery<K, V>{
+    private static final Logger LOG = LoggerFactory.getLogger(GenericQuery.class);
 
     // Query properties and variables
     protected HazelcastInstance hz;
@@ -40,7 +45,6 @@ public class GenericQuery<K, V> extends Query{
     //                                        EXPOSED METHODS
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
-    @Override
     public void executeQuery() throws ExecutionException, InterruptedException {
         // Logging start time of the job
         this.logStartTime();
@@ -84,29 +88,27 @@ public class GenericQuery<K, V> extends Query{
         final KeyValueSource<String, TreeRecord> source = KeyValueSource.fromList(list);
 
         // Creating the job with the source
-        Job<String, TreeRecord> job = jobTracker.newJob(source);
 
-        return job;
+        return jobTracker.newJob(source);
     }
 
     /**
      * Generates a Map-Reduce job for the query to be executed
      * @return the ICompletableFuture object to be waited asynchronously or synchronously
      */
-    protected Job<String, Long> generateJobFromMap(String queryJob){
+    protected Job<String, Integer> generateJobFromMap(String queryJob){
         // Getting the job tracker
         JobTracker jobTracker = this.hz.getJobTracker(queryJob);
 
         // Get the list from hazelcast, we construct the name of the record based on the city name
-        final IMap<String, Long> map = this.hz.getMap(Constants.NEIGHBOURHOOD_TREE_COUNT_MAP + this.city.getValue());
+        final IMap<String, Integer> map = this.hz.getMap(Constants.NEIGHBOURHOOD_TREE_COUNT_MAP + this.city.getValue());
 
         // Get the source for the job
-        final KeyValueSource<String, Long> source = KeyValueSource.fromMap(map);
+        final KeyValueSource<String, Integer> source = KeyValueSource.fromMap(map);
 
         // Creating the job with the source
-        Job<String, Long> job = jobTracker.newJob(source);
 
-        return job;
+        return jobTracker.newJob(source);
     }
 
     /**
@@ -120,8 +122,37 @@ public class GenericQuery<K, V> extends Query{
         // Adding a header
         sb.append(outputHeader);
         // Add data
-        results.stream().map(resultToString).forEach(s -> sb.append(s));
+        results.stream().map(resultToString).forEach(sb::append);
 
         return sb.toString();
+    }
+
+    /**
+     * Writes a given value into a filename location(can be a path)
+     * @param filename path to the output file
+     * @param value value to be written to the file
+     */
+    protected void write(String filename, String value) {
+        try {
+            FileWriter myWriter = new FileWriter(filename);
+            myWriter.write(value);
+            myWriter.close();
+        } catch (IOException e) {
+            System.out.println("An error occurred when writing query 5 to " + filename);
+        }
+    }
+
+    /**
+     * Logs the initial time of the mapreduce job as specified
+     */
+    protected void logStartTime(){
+        LOG.info("Inicio del trabajo map/reduce");
+    }
+
+    /**
+     * Logs the end time of the mapreduce job as specified
+     */
+    protected void logEndTime(){
+        LOG.info("Fin del trabajo map/reduce");
     }
 }
