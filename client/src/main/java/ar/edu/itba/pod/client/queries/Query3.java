@@ -10,12 +10,13 @@ import ar.edu.itba.pod.client.enums.Cities;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.ICompletableFuture;
 import com.hazelcast.core.IList;
-import com.hazelcast.core.IMap;
 import com.hazelcast.mapreduce.Job;
 import com.hazelcast.mapreduce.JobTracker;
 import com.hazelcast.mapreduce.KeyValueSource;
 
-import java.util.*;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class Query3 extends Query{

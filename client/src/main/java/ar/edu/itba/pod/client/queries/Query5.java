@@ -1,15 +1,11 @@
 package ar.edu.itba.pod.client.queries;
 
 import api.TreeRecord;
-import api.combiners.TreeDiameterCombinerFactory;
 import api.combiners.TreePerNeighbourhoodCombinerFactory;
-import api.mappers.TreeDiameterMapper;
 import api.mappers.TreeNeighbourhoodPairMapper;
 import api.mappers.TreePerNeighbourhoodCountMapper;
-import api.reducers.TreeDiameterReducerFactory;
 import api.reducers.TreeNeighbourhoodPairReducerFactory;
 import api.reducers.TreePerNeighbourhoodReducerFactory;
-import ar.edu.itba.pod.client.Client;
 import ar.edu.itba.pod.client.Constants;
 import ar.edu.itba.pod.client.enums.Cities;
 import com.hazelcast.core.HazelcastInstance;
@@ -22,14 +18,11 @@ import com.hazelcast.mapreduce.KeyValueSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
 
 public class Query5 extends Query {
-    private static final Logger LOG = LoggerFactory.getLogger(Client.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Query5.class);
 
     // Query properties and variables
     private final HazelcastInstance hz;
