@@ -5,6 +5,7 @@ import com.hazelcast.mapreduce.Collator;
 import java.util.*;
 
 public class TreeDiameterCollator implements Collator<Map.Entry<String, Double>, List<Map.Entry<String, Double>>> {
+
     private final int n;
 
     // Comparator used to compare the Map.Entry objects with the Map-Reduce results
@@ -21,6 +22,7 @@ public class TreeDiameterCollator implements Collator<Map.Entry<String, Double>,
 
     @Override
     public List<Map.Entry<String, Double>> collate(Iterable<Map.Entry<String, Double>> iterable) {
+
         // TreeSet to get ordered results, first descending by diameter, then by alphabetic name
         TreeSet<Map.Entry<String, Double>> orderedResults = new TreeSet<>(ENTRY_COMPARATOR);
         iterable.forEach(orderedResults::add);
