@@ -36,7 +36,7 @@ cd server/target/ && tar -xzf tpe2-g2-server-1.0-SNAPSHOT-bin.tar.gz && cd tpe2-
 ```
 
 ### Queries
-To run the client queries, first you have to be in the client directory:
+To run the client queries, from terminal B run:
 ```
 cd client/target/
 tar -xzf tpe2-g2-client-1.0-SNAPSHOT-bin.tar.gz
