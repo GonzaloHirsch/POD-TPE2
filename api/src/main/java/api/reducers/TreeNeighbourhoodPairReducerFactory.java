@@ -6,9 +6,9 @@ import com.hazelcast.mapreduce.ReducerFactory;
 import java.util.Comparator;
 import java.util.TreeSet;
 
-public class TreeNeighbourhoodPairReducerFactory implements ReducerFactory<Integer, String, TreeSet<String>> {
+public class TreeNeighbourhoodPairReducerFactory implements ReducerFactory<Long, String, TreeSet<String>> {
     @Override
-    public Reducer<String, TreeSet<String>> newReducer(Integer c) {
+    public Reducer<String, TreeSet<String>> newReducer(Long c) {
         return new TreeNeighbourhoodPairReducer();
     }
 
