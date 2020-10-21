@@ -11,7 +11,6 @@ import com.hazelcast.core.ICompletableFuture;
 import com.hazelcast.mapreduce.Job;
 
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
 
 public class Query3 extends GenericQuery<String, Double> {
@@ -31,29 +30,7 @@ public class Query3 extends GenericQuery<String, Double> {
     }
 
     @Override
-    public void executeQuery() throws ExecutionException, InterruptedException {
-        // Logging start time of the job
-        this.logStartTime();
-
-        // Extract the desire results
-        List<Map.Entry<String, Double>> list = this.customSubmitJob().get();
-
-        // Generate the output string
-        String infoForFile = this.prepareOutput(list);
-
-        // Writing the results in the output file
-        this.write(this.outputFile, infoForFile);
-
-        // Logging end time of the job
-        this.logEndTime();
-    }
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    //                                        PRIVATE METHODS
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-
-
-    protected ICompletableFuture<List<Map.Entry<String, Double>>> customSubmitJob(){
+    protected ICompletableFuture<List<Map.Entry<String, Double>>> submitJob(){
         // Creating the job with the source
         Job<String, TreeRecord> job = this.generateJobFromList(QUERY_3_JOB);
 
@@ -63,20 +40,5 @@ public class Query3 extends GenericQuery<String, Double> {
             .combiner(new TreeDiameterCombinerFactory())
             .reducer(new TreeDiameterReducerFactory())
             .submit(new TreeDiameterCollator(this.n));
-    }
-
-    /**
-     * Given the filtered output for the query, transform it into a string to be written to the output file
-     * @param results List with Map.Entry objects holding the first n results
-     * @return a String with the information to be written in the output file
-     */
-    private String prepareOutput(List<Map.Entry<String, Double>> results){
-        // We build the string with a string builder
-        StringBuilder sb = new StringBuilder();
-        // Adding a header
-        sb.append(OUTPUT_HEADER);
-        // Adding the data
-        results.forEach(r -> sb.append(r.getKey()).append(";").append(String.format(Locale.ENGLISH, "%.2f\n", r.getValue())));
-        return sb.toString();
     }
 }
