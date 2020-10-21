@@ -81,6 +81,7 @@ public class Parser {
         Iterator<String> iterator = lines.iterator();
         String headersLine = iterator.next();
         headers = headersLine.toLowerCase().trim().split(";");
+
         setTreeRecordsIndexes(Arrays.asList(headers));
 
         String[] treeRecordElements;
@@ -95,46 +96,56 @@ public class Parser {
     }
 
     private void setTreeRecordsIndexes(List<String> headers) {
-        Iterator<String> iterator = headers.iterator();
-        String header;
         int search = 0;
-        while (iterator.hasNext() && search < 4) {
-            header = iterator.next();
-            search = findHeader(search, header, headers);
+        while (search < 4) {
+            search = findHeader(search, headers);
         }
     }
 
     /**
      * This method is necessary since needed headers are not always at the same indexes
      */
-    private int findHeader(int search, String header, List<String> headers) {
+    private int findHeader(int search, List<String> headers) {
         switch (search) {
             case 0: { // case of neighbourhood
-                if (neighbourhoodHeader.contains(header)) {
-                    NEIGHBOURHOOD_NAME_ID = headers.indexOf(header);
-                    return search + 1;
+                for(String header : headers) {
+                    if (neighbourhoodHeader.contains(header)) {
+                        NEIGHBOURHOOD_NAME_ID = headers.indexOf(header);
+                        return search + 1;
+                    }
                 }
+                break;
             }
             case 1: { // case of street
-                if (streetHeader.contains(header)) {
-                    STREET_ID = headers.indexOf(header);
-                    return search + 1;
+                for(String header : headers) {
+                    if (streetHeader.contains(header)) {
+                        STREET_ID = headers.indexOf(header);
+                        return search + 1;
+                    }
                 }
+                break;
             }
             case 2: { // case of common name
-                if (commonNameHeader.contains(header)) {
-                    COMMON_NAME_ID = headers.indexOf(header);
-                    return search + 1;
+                for(String header : headers) {
+                    if (commonNameHeader.contains(header)) {
+                        COMMON_NAME_ID = headers.indexOf(header);
+                        return search + 1;
+                    }
                 }
+                break;
             }
             case 3: { // case of diameter
-                if (diameterHeader.contains(header)) {
-                    DIAMETER_ID = headers.indexOf(header);
-                    return search + 1;
+                for(String header : headers) {
+                    if (diameterHeader.contains(header)) {
+                        DIAMETER_ID = headers.indexOf(header);
+                        return search + 1;
+                    }
                 }
+                break;
             }
             default:
                 return search;
         }
+        return search;
     }
 }
