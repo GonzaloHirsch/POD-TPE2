@@ -62,7 +62,9 @@ public class Query5 extends GenericQuery<Long, TreeSet<String>> {
 
         final IMap<String, Long> hzMap = this.hz.getMap(Constants.NEIGHBOURHOOD_TREE_COUNT_MAP + this.city.getValue());
         // adds data to Hazelcast IMap
-        treePerNeighbourhoodResult.entrySet().stream().forEach(r -> hzMap.put(r.getKey(), new Long(r.getValue())));
+        for (Map.Entry<String, Integer> r : treePerNeighbourhoodResult.entrySet()) {
+            hzMap.put(r.getKey(), new Long(r.getValue()));
+        }
 
         Job<String, Long> secondJob = this.generateJobFromMap(QUERY_5_SECOND_JOB);
 
