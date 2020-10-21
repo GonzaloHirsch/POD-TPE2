@@ -1,6 +1,7 @@
 package ar.edu.itba.pod.client.queries;
 
 import api.TreeRecord;
+import api.collators.TreeDiameterCollator;
 import api.combiners.TreeDiameterCombinerFactory;
 import api.mappers.TreeDiameterMapper;
 import api.reducers.TreeDiameterReducerFactory;
@@ -9,6 +10,7 @@ import ar.edu.itba.pod.client.enums.Cities;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.ICompletableFuture;
 import com.hazelcast.core.IList;
+import com.hazelcast.core.IMap;
 import com.hazelcast.mapreduce.Job;
 import com.hazelcast.mapreduce.JobTracker;
 import com.hazelcast.mapreduce.KeyValueSource;
@@ -26,14 +28,6 @@ public class Query3 extends Query{
     // Constants to be used
     private static final String QUERY_3_JOB = "QUERY_3";
     private static final String OUTPUT_HEADER = "NOMBRE_CIENTIFICO;PROMEDIO_DIAMETRO\n";
-
-    // Comparator used to compare the Map.Entry objects with the Map-Reduce results
-    // First comparison is made by value, in descending order
-    // Second comparison is in alphabetic order
-    private static final Comparator<Map.Entry<String, Double>> ENTRY_COMPARATOR = (o1, o2) -> {
-        int res = o2.getValue().compareTo(o1.getValue());
-        return res == 0 ? o1.getKey().compareTo(o2.getKey()) : res;
-    };
 
     public Query3(HazelcastInstance hz, String outputFile, Cities city, int n){
         this.hz = hz;
@@ -53,16 +47,13 @@ public class Query3 extends Query{
         this.logStartTime();
 
         // Generating the mapreduce job
-        ICompletableFuture<Map<String, Double>> futureJob = this.generateJob();
+        ICompletableFuture<List<Map.Entry<String, Double>>> futureJob = this.generateJob();
 
         // Wait and retrieve the result
-        Map<String, Double> result = futureJob.get();
-
-        // Extract the desire results
-        List<Map.Entry<String, Double>> firstNResults = this.extractResults(result);
+        List<Map.Entry<String, Double>> result = futureJob.get();
 
         // Generate the output string
-        String infoForFile = this.prepareOutput(firstNResults);
+        String infoForFile = this.prepareOutput(result);
 
         // Writing the results in the output file
         this.write(this.outputFile, infoForFile);
@@ -80,7 +71,7 @@ public class Query3 extends Query{
      * Generates a Map-Reduce job for the query to be executed
      * @return the ICompletableFuture object to be waited asynchronously or synchronously
      */
-    private ICompletableFuture<Map<String, Double>> generateJob(){
+    private ICompletableFuture<List<Map.Entry<String, Double>>> generateJob(){
         // Getting the job tracker
         JobTracker jobTracker = this.hz.getJobTracker(QUERY_3_JOB);
 
@@ -98,29 +89,7 @@ public class Query3 extends Query{
                 .mapper(new TreeDiameterMapper())
                 .combiner(new TreeDiameterCombinerFactory())
                 .reducer(new TreeDiameterReducerFactory())
-                .submit();
-    }
-
-    /**
-     * Extracts the first n results given a Map-Reduce job results
-     * @param result Map with the results of the Map-Reduce job
-     * @return a sorted list of map entries with the information to be written in the output file
-     */
-    private List<Map.Entry<String, Double>> extractResults(Map<String, Double> result){
-        // TreeSet to get ordered results, first descending by diameter, then by alphabetic name
-        TreeSet<Map.Entry<String, Double>> orderedResults = new TreeSet<>(ENTRY_COMPARATOR);
-        orderedResults.addAll(result.entrySet());
-
-        // Keeping the first n results, we use an iterator for this
-        List<Map.Entry<String, Double>> firstNResults = new ArrayList<>(this.n);
-        Iterator<Map.Entry<String, Double>> iterator = orderedResults.iterator();
-        int count = 0;
-        while (count < n && iterator.hasNext()){
-            firstNResults.add(iterator.next());
-            count++;
-        }
-
-        return firstNResults;
+                .submit(new TreeDiameterCollator(this.n));
     }
 
     /**
