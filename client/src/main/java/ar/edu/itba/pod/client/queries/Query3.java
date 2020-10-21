@@ -26,7 +26,7 @@ public class Query3 extends GenericQuery<String, Double> {
             r -> r.getKey() + ";" + String.format(Locale.ENGLISH, "%.2f\n", r.getValue());
 
     public Query3(HazelcastInstance hz, String outputFile, Cities city, int n){
-        super(hz, city, outputFile, OUTPUT_HEADER, RESULT_TO_STRING, null);
+        super(hz, city, outputFile, OUTPUT_HEADER, RESULT_TO_STRING);
         this.n = n;
     }
 
