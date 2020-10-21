@@ -15,13 +15,12 @@ import com.hazelcast.core.IMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Optional;
 
 public class Client {
-    private static Logger LOG = LoggerFactory.getLogger(Client.class);
-
     // CLUSTER CONSTANTS
     private static final String NAME = "g2";
     private static final String PASSWORD = "nuestra_password";
@@ -42,13 +41,13 @@ public class Client {
             final HazelcastInstance hz = GetHazelInstance(arguments.getAddresses());
 
             // Parsing the input files and populating the hazelcast structures
-            ParseAndPopulateStructures(hz, arguments.getCity(), arguments.getInPath());
+            ParseAndPopulateStructures(hz, arguments.getCity(), arguments.getInPath(), arguments.getQuery(), arguments.getOutPath());
 
             // TODO: TODA LA LOGICA VA ACA
             // TODO: AGREGAR CODIGO POR QUERY
             // TODO: SE PUEDEN HACER FUNCIONES QUE RECIBAN LOS PARAMETROS DE ARGUMENTS Y EL CLIENTE DE HAZELCAST
             // Query to be executed
-            Optional<GenericQuery> optionalQuery = Optional.empty();
+            Optional<GenericQuery<?,?>> optionalQuery = Optional.empty();
             Queries chosenQuery = arguments.getQuery();
             switch (chosenQuery) {
                 case QUERY_1:
@@ -109,27 +108,41 @@ public class Client {
      * @param hz Instance of the hazelcast client
      * @param city City chosen to be analyzed
      * @param inPath Path to the folder containing the input files
+     * @param query Query to be performed
+     * @param outPath Path to the file for output
      * @throws IOException if there is an error parsing the files
      */
-    private static void ParseAndPopulateStructures(HazelcastInstance hz, Cities city, String inPath) throws IOException {
+    private static void ParseAndPopulateStructures(HazelcastInstance hz, Cities city, String inPath, Queries query, String outPath) throws IOException {
         // Logging start time of parsing
-        LOG.info("Inicio de la lectura del archivo");
+        CustomLogger.GetInstance().writeTimestamp(
+                new File(outPath).getParent() + "/" + query.get_logFilename(),
+                "Inicio de la lectura del archivo",
+                false
+        );
 
         // File parsing to get both neighbours and tree records information
         Parser parser = new Parser(city, inPath);
         parser.parse(true, true);
 
-        // Logging end time of parsing
-        LOG.info("Fin de lectura del archivo");
-
         // Getting both structures from hazelcast
         final IList<TreeRecord> treeRecordList = hz.getList(Constants.TREE_RECORD_LIST + city.getValue());
         final IMap<String, Long> neighbourhoodsMap = hz.getMap(Constants.NEIGHBOURHOOD_TREE_COUNT_MAP + city.getValue());
+
+        // Clearing the collections just in case
+        treeRecordList.clear();
+        neighbourhoodsMap.clear();
 
         // Populating the tree records
         treeRecordList.addAll(parser.getTreeRecords());
 
         // Populating the neighbourhoods
         neighbourhoodsMap.putAll(parser.getNeighbours());
+
+        // Logging end time of parsing
+        CustomLogger.GetInstance().writeTimestamp(
+                new File(outPath).getParent() + "/" + query.get_logFilename(),
+                "Fin de lectura del archivo",
+                true
+        );
     }
 }

@@ -8,9 +8,15 @@ public enum Queries {
     QUERY_1(1), QUERY_2(2), QUERY_3(3), QUERY_4(4), QUERY_5(5);
 
     private final int _id;
+    private final String _logFilename;
+
+    public String get_logFilename() {
+        return _logFilename;
+    }
 
     Queries(int id){
         this._id = id;
+        this._logFilename = "query" + this._id + ".txt";
     }
 
     public static Queries FromValue(int id) throws InvalidArgumentsException {

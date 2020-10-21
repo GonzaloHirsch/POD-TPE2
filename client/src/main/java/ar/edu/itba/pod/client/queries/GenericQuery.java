@@ -2,7 +2,9 @@ package ar.edu.itba.pod.client.queries;
 
 import api.TreeRecord;
 import ar.edu.itba.pod.client.Constants;
+import ar.edu.itba.pod.client.CustomLogger;
 import ar.edu.itba.pod.client.enums.Cities;
+import ar.edu.itba.pod.client.enums.Queries;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.ICompletableFuture;
 import com.hazelcast.core.IList;
@@ -11,34 +13,36 @@ import com.hazelcast.mapreduce.Job;
 import com.hazelcast.mapreduce.JobTracker;
 import com.hazelcast.mapreduce.KeyValueSource;
 import org.apache.commons.lang3.NotImplementedException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.*;
+import java.io.File;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
 
 public abstract class GenericQuery<K, V>{
-    private static final Logger LOG = LoggerFactory.getLogger(GenericQuery.class);
-
     // Query properties and variables
     protected HazelcastInstance hz;
     protected Cities city;
+    protected Queries query;
     protected String outputFile;
 
     // Needed for output file
     protected String outputHeader;
     protected Function<Map.Entry<K, V>, String> resultToString;
 
-    public GenericQuery(HazelcastInstance hz, Cities city, String outputFile, String outputHeader,
+    // Filepath to the output folder
+    private final String outputFolder;
+
+    public GenericQuery(HazelcastInstance hz, Cities city, Queries query, String outputFile, String outputHeader,
                         Function<Map.Entry<K, V>, String> resultToString) {
         this.hz = hz;
         this.city = city;
+        this.query = query;
         this.outputFile = outputFile;
         this.outputHeader = outputHeader;
         this.resultToString = resultToString;
+        this.outputFolder = new File(this.outputFile).getParent();
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -133,26 +137,28 @@ public abstract class GenericQuery<K, V>{
      * @param value value to be written to the file
      */
     protected void write(String filename, String value) {
-        try {
-            FileWriter myWriter = new FileWriter(filename);
-            myWriter.write(value);
-            myWriter.close();
-        } catch (IOException e) {
-            System.out.println("An error occurred when writing query 5 to " + filename);
-        }
+        CustomLogger.GetInstance().write(filename, value);
     }
 
     /**
      * Logs the initial time of the mapreduce job as specified
      */
     protected void logStartTime(){
-        LOG.info("Inicio del trabajo map/reduce");
+        CustomLogger.GetInstance().writeTimestamp(
+                this.outputFolder + "/" + this.query.get_logFilename(),
+                "Inicio del trabajo map/reduce",
+                true
+        );
     }
 
     /**
      * Logs the end time of the mapreduce job as specified
      */
     protected void logEndTime(){
-        LOG.info("Fin del trabajo map/reduce");
+        CustomLogger.GetInstance().writeTimestamp(
+                this.outputFolder + "/" + this.query.get_logFilename(),
+                "Fin del trabajo map/reduce",
+                true
+        );
     }
 }

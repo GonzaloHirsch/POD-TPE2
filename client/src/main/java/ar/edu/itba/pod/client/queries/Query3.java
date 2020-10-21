@@ -6,6 +6,7 @@ import api.combiners.TreeDiameterCombinerFactory;
 import api.mappers.TreeDiameterMapper;
 import api.reducers.TreeDiameterReducerFactory;
 import ar.edu.itba.pod.client.enums.Cities;
+import ar.edu.itba.pod.client.enums.Queries;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.ICompletableFuture;
 import com.hazelcast.mapreduce.Job;
@@ -24,7 +25,7 @@ public class Query3 extends GenericQuery<String, Double> {
             r -> r.getKey() + ";" + String.format(Locale.ENGLISH, "%.2f\n", r.getValue());
 
     public Query3(HazelcastInstance hz, String outputFile, Cities city, int n){
-        super(hz, city, outputFile, OUTPUT_HEADER, RESULT_TO_STRING);
+        super(hz, city, Queries.QUERY_3, outputFile, OUTPUT_HEADER, RESULT_TO_STRING);
         this.n = n;
     }
 

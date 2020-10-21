@@ -9,6 +9,7 @@ import api.reducers.TreeNeighbourhoodPairReducerFactory;
 import api.reducers.TreePerNeighbourhoodReducerFactory;
 import ar.edu.itba.pod.client.Constants;
 import ar.edu.itba.pod.client.enums.Cities;
+import ar.edu.itba.pod.client.enums.Queries;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.ICompletableFuture;
 import com.hazelcast.core.IMap;
@@ -43,7 +44,7 @@ public class Query5 extends GenericQuery<Integer, TreeSet<String>> {
     };
 
     public Query5(HazelcastInstance hz, String outputFile, Cities city){
-        super(hz, city, outputFile, OUTPUT_HEADER, RESULT_TO_STRING);
+        super(hz, city, Queries.QUERY_5, outputFile, OUTPUT_HEADER, RESULT_TO_STRING);
     }
 
     @Override

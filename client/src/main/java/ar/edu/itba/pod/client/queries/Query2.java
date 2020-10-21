@@ -6,6 +6,7 @@ import api.combiners.TreePerStreetCombinerFactory;
 import api.mappers.TreePerStreetMapper;
 import api.reducers.TreePerStreetReducerFactory;
 import ar.edu.itba.pod.client.enums.Cities;
+import ar.edu.itba.pod.client.enums.Queries;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.ICompletableFuture;
 import com.hazelcast.mapreduce.Job;
@@ -25,7 +26,7 @@ public class Query2 extends GenericQuery<String, MutablePair<String, Long>> {
             r -> r.getKey() + ";" + r.getValue().left + ";" + r.getValue().right + "\n";
 
     public Query2(HazelcastInstance hz, String outputFile, Cities city){
-        super(hz, city, outputFile, OUTPUT_HEADER, RESULT_TO_STRING);
+        super(hz, city, Queries.QUERY_2, outputFile, OUTPUT_HEADER, RESULT_TO_STRING);
     }
 
     /**
