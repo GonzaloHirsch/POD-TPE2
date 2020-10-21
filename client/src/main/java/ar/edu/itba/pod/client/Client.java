@@ -5,6 +5,7 @@ import ar.edu.itba.pod.client.enums.Cities;
 import ar.edu.itba.pod.client.enums.Queries;
 import ar.edu.itba.pod.client.exceptions.InvalidArgumentsException;
 import ar.edu.itba.pod.client.queries.Query;
+import ar.edu.itba.pod.client.queries.Query2;
 import ar.edu.itba.pod.client.queries.Query3;
 import ar.edu.itba.pod.client.queries.Query5;
 import com.hazelcast.client.HazelcastClient;
@@ -48,6 +49,7 @@ public class Client {
             // Parsing the input files and populating the hazelcast structures
             ParseAndPopulateStructures(hz, arguments.getCity(), arguments.getInPath());
 
+
             // TODO: TODA LA LOGICA VA ACA
             // TODO: AGREGAR CODIGO POR QUERY
             // TODO: SE PUEDEN HACER FUNCIONES QUE RECIBAN LOS PARAMETROS DE ARGUMENTS Y EL CLIENTE DE HAZELCAST
@@ -58,6 +60,7 @@ public class Client {
                 case QUERY_1:
                     break;
                 case QUERY_2:
+                    optionalQuery = Optional.of(new Query2(hz, arguments.getOutPath(), arguments.getCity()));
                     break;
                 case QUERY_3:
                     optionalQuery = Optional.of(new Query3(hz, arguments.getOutPath(), arguments.getCity(), arguments.getN()));

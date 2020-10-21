@@ -57,6 +57,8 @@ To run the query 1, the following command is used:
 #### Query 2
 To run the query 2, the following command is used:
 ```
+./query2.sh -Dcity=BUE -Daddresses='192.168.1.192:5701' -DinPath=./../../../examples/ -DoutPath=./../../../examples/result-bue-2.csv
+./query2.sh -Dcity=VAN -Daddresses='192.168.1.192:5701' -DinPath=./../../../examples/ -DoutPath=./../../../examples/result-van-2.csv
 ```
 
 #### Query 3
