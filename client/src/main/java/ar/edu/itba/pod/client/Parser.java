@@ -36,10 +36,12 @@ public class Parser {
     Once the parser is initialized, we should call this method in order to
     parse both neighbours file and tree records file. We can access to the
     information through getters for both neighbours mao and tree records list.
+     @param parseNeighbourhoods if true, neighbourhoods file will be parsed
+     @param parseRecords if true, tree records file will be parsed
     */
-    public void parse() throws IOException {
-        parseNeighbourhoods();
-        parseTreeRecords();
+    public void parse(boolean parseNeighbourhoods, boolean parseRecords) throws IOException {
+        if(parseNeighbourhoods) parseNeighbourhoods();
+        if(parseRecords) parseTreeRecords();
     }
 
     public Map<String, Long> getNeighbours() {

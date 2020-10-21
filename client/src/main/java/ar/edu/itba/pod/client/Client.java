@@ -120,7 +120,7 @@ public class Client {
 
         // File parsing to get both neighbours and tree records information
         Parser parser = new Parser(city, inPath);
-        parser.parse();
+        parser.parse(true, true);
 
         // Logging end time of parsing
         LOG.info("Fin de lectura del archivo");
