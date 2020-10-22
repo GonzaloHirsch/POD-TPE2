@@ -2,6 +2,8 @@ package api.collators;
 
 import com.hazelcast.mapreduce.Collator;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 
 public class TreeDiameterCollator implements Collator<Map.Entry<String, Double>, List<Map.Entry<String, Double>>> {
@@ -25,7 +27,10 @@ public class TreeDiameterCollator implements Collator<Map.Entry<String, Double>,
 
         // TreeSet to get ordered results, first descending by diameter, then by alphabetic name
         TreeSet<Map.Entry<String, Double>> orderedResults = new TreeSet<>(ENTRY_COMPARATOR);
-        iterable.forEach(orderedResults::add);
+        iterable.forEach(e -> {
+            e.setValue(round(e.getValue(), 2)); // we want to round before we sort
+            orderedResults.add(e);
+        });
 
         // Keeping the first n results, we use an iterator for this
         List<Map.Entry<String, Double>> firstNResults = new ArrayList<>(this.n);
@@ -37,5 +42,19 @@ public class TreeDiameterCollator implements Collator<Map.Entry<String, Double>,
         }
 
         return firstNResults;
+    }
+
+    /**
+     *
+     * @param val originl double value
+     * @param n how many decimals we want to keep
+     * @return double with n decimals
+     */
+    private double round(double val, int n) {
+        if(n < 0) throw new IllegalArgumentException();
+
+        BigDecimal bigDecimal = new BigDecimal(val);
+        bigDecimal = bigDecimal.setScale(n, RoundingMode.HALF_UP);
+        return bigDecimal.doubleValue();
     }
 }
