@@ -54,7 +54,7 @@ public class Client {
                     optionalQuery = Optional.of(new Query1(hz, arguments.getOutPath(), arguments.getCity()));
                     break;
                 case QUERY_2:
-                    optionalQuery = Optional.of(new Query2(hz, arguments.getOutPath(), arguments.getCity()));
+                    optionalQuery = Optional.of(new Query2(hz, arguments.getOutPath(), arguments.getCity(), arguments.getMin()));
                     break;
                 case QUERY_3:
                     optionalQuery = Optional.of(new Query3(hz, arguments.getOutPath(), arguments.getCity(), arguments.getN()));

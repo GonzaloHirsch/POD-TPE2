@@ -25,8 +25,11 @@ public class Query2 extends GenericQuery<String, MutablePair<String, Long>> {
     private static final Function<Map.Entry<String, MutablePair<String, Long>>, String> RESULT_TO_STRING =
             r -> r.getKey() + ";" + r.getValue().left + ";" + r.getValue().right + "\n";
 
-    public Query2(HazelcastInstance hz, String outputFile, Cities city){
+    private final int min;
+
+    public Query2(HazelcastInstance hz, String outputFile, Cities city, int min){
         super(hz, city, Queries.QUERY_2, outputFile, OUTPUT_HEADER, RESULT_TO_STRING);
+        this.min = min;
     }
 
     /**
@@ -43,6 +46,6 @@ public class Query2 extends GenericQuery<String, MutablePair<String, Long>> {
                 .mapper(new TreePerStreetMapper())
                 .combiner(new TreePerStreetCombinerFactory())
                 .reducer(new TreePerStreetReducerFactory())
-                .submit(new TreePerStreetCollator());
+                .submit(new TreePerStreetCollator(min));
     }
 }

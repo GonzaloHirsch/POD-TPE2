@@ -12,6 +12,12 @@ public class TreePerStreetCollator implements
     private static final Comparator<Map.Entry<String, MutablePair<String, Long>>> ENTRY_COMPARATOR =
             Comparator.comparing(Map.Entry::getKey);
 
+    private final long min;
+
+    public TreePerStreetCollator(long min) {
+        this.min = min;
+    }
+
     @Override
     public List<Map.Entry<String, MutablePair<String, Long>>> collate(
             Iterable<Map.Entry<String, MutablePair<String, Long>>> iterable) {
@@ -19,7 +25,9 @@ public class TreePerStreetCollator implements
         TreeSet<Map.Entry<String, MutablePair<String, Long>>> orderedResults = new TreeSet<>(ENTRY_COMPARATOR);
 
         // adds results to this collection
-        iterable.forEach(orderedResults::add);
+        iterable.forEach(e -> {
+            if(e.getValue().right.longValue() >= this.min) orderedResults.add(e);
+        });
 
         // return results in a list
         return new ArrayList<>(orderedResults);
