@@ -52,6 +52,8 @@ cd client/target/ && tar -xzf tpe2-g2-client-1.0-SNAPSHOT-bin.tar.gz && cd tpe2-
 #### Query 1
 To run the query 1, the following command is used:
 ```
+./query1.sh -Dcity=BUE -Daddresses='192.168.1.192:5701' -DinPath=./../../../examples/ -DoutPath=./../../../examples/result-bue-1.csv
+./query1.sh -Dcity=VAN -Daddresses='192.168.1.192:5701' -DinPath=./../../../examples/ -DoutPath=./../../../examples/result-van-1.csv
 ```
 
 #### Query 2

@@ -51,6 +51,7 @@ public class Client {
             Queries chosenQuery = arguments.getQuery();
             switch (chosenQuery) {
                 case QUERY_1:
+                    optionalQuery = Optional.of(new Query1(hz, arguments.getOutPath(), arguments.getCity()));
                     break;
                 case QUERY_2:
                     optionalQuery = Optional.of(new Query2(hz, arguments.getOutPath(), arguments.getCity()));
