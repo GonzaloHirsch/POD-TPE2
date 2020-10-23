@@ -130,12 +130,11 @@ public class Client {
             case QUERY_1:
             case QUERY_2:
             case QUERY_3:
+            case QUERY_4:
                 parser.parse(false, true);
                 FillList(hz, parser, city);
                 break;
-            case QUERY_4:
             case QUERY_5:
-                // TODO: VER QUE NECESITAMOS
                 parser.parse(true, true);
                 FillList(hz, parser, city);
                 FillMap(hz, parser, city);
