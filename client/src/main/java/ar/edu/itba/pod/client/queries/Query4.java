@@ -33,7 +33,7 @@ import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
 
-public class Query4 extends GenericQuery<Integer, TreeSet<String>> {
+public class Query4 extends GenericQuery<String, String> {
     private static final Logger LOG = LoggerFactory.getLogger(Client.class);
 
     private final String treeName;
@@ -47,21 +47,7 @@ public class Query4 extends GenericQuery<Integer, TreeSet<String>> {
     // First comparison is made by value, in descending order
     // Second comparison is in alphabetic order
     // This function transforms results' entries into strings
-    private static final Function<List<String>, String> RESULT_TO_STRING = r -> {
-        List<String> neighbourhoods = new ArrayList<>(r);
-        int size = neighbourhoods.size();
-        StringBuilder sb = new StringBuilder();
-
-        // Only want to print the neighbourhoods with more than 1000 trees and must list PAIRS
-        if (/*r.getKey() >= this.minTrees && */size >= 2) {
-            for (int i = 0; i < size - 1; i++) {
-                for (int j = i + 1; j < size; j++) {
-                    sb.append(neighbourhoods.get(i)).append(";").append(neighbourhoods.get(j)).append("\n");
-                }
-            }
-        }
-        return sb.toString();
-    };
+    private static final Function<Map.Entry<String, String>, String> RESULT_TO_STRING = r -> r.getKey() + ";" + r.getValue() + "\n";
 
     public Query4(HazelcastInstance hz, String outputFile, Cities city, String treeName, int minTrees){
         super(hz, city, Queries.QUERY_4, outputFile, OUTPUT_HEADER, RESULT_TO_STRING);
@@ -70,7 +56,7 @@ public class Query4 extends GenericQuery<Integer, TreeSet<String>> {
     }
 
     @Override
-    protected ICompletableFuture<List<String>> submitJob() throws ExecutionException, InterruptedException {
+    protected ICompletableFuture<List<Map.Entry<String, String>>> submitJob() throws ExecutionException, InterruptedException {
         Job<String, TreeRecord> job = this.generateJobFromList(QUERY_4_JOB);
 
         return job
