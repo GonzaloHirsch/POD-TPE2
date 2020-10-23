@@ -17,7 +17,7 @@ public class TreePerNeighbourhoodCollator implements
         return res == 0 ? o1.getKey().compareTo(o2.getKey()) : res;
     };
 
-    private Map<String, Long> neighbourhoods;
+    private final Map<String, Long> neighbourhoods;
 
     public TreePerNeighbourhoodCollator(Map<String, Long> neighbourhoods){
         this.neighbourhoods = neighbourhoods;

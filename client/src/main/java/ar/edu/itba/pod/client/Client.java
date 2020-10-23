@@ -123,21 +123,24 @@ public class Client {
 
         // File parsing to get both neighbours and tree records information
         Parser parser = new Parser(city, inPath);
-        parser.parse(true, true);
 
-        // Getting both structures from hazelcast
-        final IList<TreeRecord> treeRecordList = hz.getList(Constants.TREE_RECORD_LIST + city.getValue());
-        final IMap<String, Long> neighbourhoodsMap = hz.getMap(Constants.NEIGHBOURHOOD_TREE_COUNT_MAP + city.getValue());
-
-        // Clearing the collections just in case
-        treeRecordList.clear();
-        neighbourhoodsMap.clear();
-
-        // Populating the tree records
-        treeRecordList.addAll(parser.getTreeRecords());
-
-        // Populating the neighbourhoods
-        neighbourhoodsMap.putAll(parser.getNeighbours());
+        // Populating the structures depending on the query chosen
+        switch (query) {
+            case QUERY_1:
+            case QUERY_2:
+            case QUERY_3:
+                parser.parse(false, true);
+                FillList(hz, parser, city);
+                break;
+            case QUERY_4:
+                // TODO: VER QUE NECESITAMOS
+                break;
+            case QUERY_5:
+                parser.parse(true, true);
+                FillList(hz, parser, city);
+                FillMap(hz, parser, city);
+                break;
+        }
 
         // Logging end time of parsing
         CustomLogger.GetInstance().writeTimestamp(
@@ -145,5 +148,35 @@ public class Client {
                 "Fin de lectura del archivo",
                 true
         );
+    }
+
+    /**
+     * Populates the List form Hazelcast using the data from the parser
+     * @param hz Hazelcast Client instance
+     * @param parser Parser with parsed data
+     * @param city City chosen
+     */
+    private static void FillList(HazelcastInstance hz, Parser parser, Cities city){
+        // Getting the structure from hazelcast
+        final IList<TreeRecord> treeRecordList = hz.getList(Constants.TREE_RECORD_LIST + city.getValue());
+        // Clearing the collection just in case
+        treeRecordList.clear();
+        // Populating the tree records
+        treeRecordList.addAll(parser.getTreeRecords());
+    }
+
+    /**
+     * Populates the Map form Hazelcast using the data from the parser
+     * @param hz Hazelcast Client instance
+     * @param parser Parser with parsed data
+     * @param city City chosen
+     */
+    private static void FillMap(HazelcastInstance hz, Parser parser, Cities city){
+        // Getting the structure from hazelcast
+        final IMap<String, Long> neighbourhoodsMap = hz.getMap(Constants.NEIGHBOURHOOD_TREE_COUNT_MAP + city.getValue());
+        // Clearing the collection just in case
+        neighbourhoodsMap.clear();
+        // Populating the neighbourhoods
+        neighbourhoodsMap.putAll(parser.getNeighbours());
     }
 }
