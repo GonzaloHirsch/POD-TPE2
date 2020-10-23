@@ -3,9 +3,8 @@ package api.collators;
 import com.hazelcast.mapreduce.Collator;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
-public class Query4Collator implements Collator<Map.Entry<String, Integer>, List<Map.Entry<String, String>>> {
+public class Query4Collator implements Collator<Map.Entry<String, Integer>, List<Map.Entry<String, List<String>>>> {
     private int min;
     public Query4Collator(int min){
         this.min=min;
@@ -18,7 +17,7 @@ public class Query4Collator implements Collator<Map.Entry<String, Integer>, List
         (o1, o2) -> String.valueOf(o2).compareTo(String.valueOf(o1));
 
     @Override
-    public List<Map.Entry<String, String>> collate(Iterable<Map.Entry<String, Integer>> iterable) {
+    public List<Map.Entry<String, List<String>>> collate(Iterable<Map.Entry<String, Integer>> iterable) {
         // order set by entry_comparator
         TreeSet<String> orderedResults = new TreeSet<>(ENTRY_COMPARATOR);
 
@@ -29,11 +28,12 @@ public class Query4Collator implements Collator<Map.Entry<String, Integer>, List
         });
 
         List<String> results = new ArrayList<>(orderedResults);
-        Map<String, String> map = new HashMap<>();
+        Map<String, List<String>> map = new HashMap<>();
 
         for (int i = 0; i < results.size()-1; i++) {
-            for (int j = i; j < results.size(); j++) {
-                map.put(results.get(i), results.get(j));
+            map.put(results.get(i), new ArrayList<>());
+            for (int j = i+1; j < results.size(); j++) {
+                map.get(results.get(i)).add(results.get(j));
             }
         }
 

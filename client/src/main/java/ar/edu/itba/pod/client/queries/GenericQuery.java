@@ -73,6 +73,7 @@ public abstract class GenericQuery<K, V>{
     //                                        PRIVATE METHODS
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
+    //ICompletableFuture<List<Map.Entry<String, List<String>>>>
     protected ICompletableFuture<List<Map.Entry<K, V>>> submitJob() throws ExecutionException, InterruptedException {
         throw new NotImplementedException("This method MUST be implemented in all queries");
     }

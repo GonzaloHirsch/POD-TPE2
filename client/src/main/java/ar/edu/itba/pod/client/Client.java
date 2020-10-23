@@ -134,9 +134,8 @@ public class Client {
                 FillList(hz, parser, city);
                 break;
             case QUERY_4:
-                // TODO: VER QUE NECESITAMOS
-                break;
             case QUERY_5:
+                // TODO: VER QUE NECESITAMOS
                 parser.parse(true, true);
                 FillList(hz, parser, city);
                 FillMap(hz, parser, city);
