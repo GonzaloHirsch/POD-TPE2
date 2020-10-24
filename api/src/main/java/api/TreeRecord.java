@@ -13,7 +13,7 @@ public class TreeRecord implements DataSerializable {
     private String commonName;
     private double diameter;
 
-    private final static char delimiter = ';';
+    private final static String delimiter = ";";
 
     public TreeRecord() {}
 
@@ -53,17 +53,15 @@ public class TreeRecord implements DataSerializable {
 
     @Override
     public void writeData(ObjectDataOutput objectDataOutput) throws IOException {
-        objectDataOutput.writeUTF(neighbourhoodName);
-        objectDataOutput.writeUTF(street);
-        objectDataOutput.writeUTF(commonName);
-        objectDataOutput.writeDouble(diameter);
+        objectDataOutput.writeObject(this.toString() + "\n");
     }
 
     @Override
     public void readData(ObjectDataInput objectDataInput) throws IOException {
-        neighbourhoodName = objectDataInput.readUTF();
-        street = objectDataInput.readUTF();
-        commonName = objectDataInput.readUTF();
-        diameter = objectDataInput.readDouble();
+        String[] recordElements = ((String)objectDataInput.readObject()).split(delimiter);
+        neighbourhoodName = recordElements[0];
+        street = recordElements[1];
+        commonName = recordElements[2];
+        diameter = Double.valueOf(recordElements[3]);
     }
 }

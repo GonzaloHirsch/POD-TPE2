@@ -25,9 +25,9 @@ public class Query2 extends GenericQuery<String, MutablePair<String, Long>> {
     private static final Function<Map.Entry<String, MutablePair<String, Long>>, String> RESULT_TO_STRING =
             r -> r.getKey() + ";" + r.getValue().left + ";" + r.getValue().right + "\n";
 
-    private final int min;
+    private final long min;
 
-    public Query2(HazelcastInstance hz, String outputFile, Cities city, int min){
+    public Query2(HazelcastInstance hz, String outputFile, Cities city, long min){
         super(hz, city, Queries.QUERY_2, outputFile, OUTPUT_HEADER, RESULT_TO_STRING);
         this.min = min;
     }
