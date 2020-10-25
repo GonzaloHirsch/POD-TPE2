@@ -73,7 +73,7 @@ To run the query 3, use the following command:
 #### Query 4
 To run the query 4, use the following command:
 ```
-./query4.sh -Dcity=BUE -Daddresses='192.168.1.21:5701' -DinPath=./../../../examples/ -DoutPath=./../../../examples/result-bue-4.csv -Dmin=110 -Dname="<Nombre_De_Arbol>"
+./query4.sh -Dcity=BUE -Daddresses='192.168.1.194:5701' -DinPath=./../../../examples/ -DoutPath=./../../../examples/result-bue-4.csv -Dmin=110 -Dname='Fraxinus pennsylvanica'
 ```
 
 #### Query 5
