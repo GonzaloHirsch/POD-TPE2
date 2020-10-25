@@ -33,15 +33,16 @@ public class Parser {
     }
 
     /**
-    Once the parser is initialized, we should call this method in order to
-    parse both neighbours file and tree records file. We can access to the
-    information through getters for both neighbours mao and tree records list.
-     @param parseNeighbourhoods if true, neighbourhoods file will be parsed
-     @param parseRecords if true, tree records file will be parsed
-    */
+     * Once the parser is initialized, we should call this method in order to
+     * parse both neighbours file and tree records file. We can access to the
+     * information through getters for both neighbours mao and tree records list.
+     *
+     * @param parseNeighbourhoods if true, neighbourhoods file will be parsed
+     * @param parseRecords        if true, tree records file will be parsed
+     */
     public void parse(boolean parseNeighbourhoods, boolean parseRecords) throws IOException {
-        if(parseNeighbourhoods) parseNeighbourhoods();
-        if(parseRecords) parseTreeRecords();
+        if (parseNeighbourhoods) parseNeighbourhoods();
+        if (parseRecords) parseTreeRecords();
     }
 
     public Map<String, Long> getNeighbours() {
@@ -53,7 +54,7 @@ public class Parser {
     }
 
     /**
-    Parses neighbours file and stores information in neighbours map
+     * Parses neighbours file and stores information in neighbours map
      */
     private void parseNeighbourhoods() throws IOException {
         List<String> lines = Files.readAllLines(new File(this.neighboursPath).toPath());
@@ -72,8 +73,8 @@ public class Parser {
     }
 
     /**
-    Parses tree records file and stores information in tree records list
-    */
+     * Parses tree records file and stores information in tree records list
+     */
     private void parseTreeRecords() throws IOException {
         List<String> lines = Files.readAllLines(new File(this.treeRecordsPath).toPath(), StandardCharsets.ISO_8859_1);
         String[] headers;
@@ -108,7 +109,7 @@ public class Parser {
     private int findHeader(int search, List<String> headers) {
         switch (search) {
             case 0: { // case of neighbourhood
-                for(String header : headers) {
+                for (String header : headers) {
                     if (neighbourhoodHeader.contains(header)) {
                         NEIGHBOURHOOD_NAME_ID = headers.indexOf(header);
                         return search + 1;
@@ -117,7 +118,7 @@ public class Parser {
                 break;
             }
             case 1: { // case of street
-                for(String header : headers) {
+                for (String header : headers) {
                     if (streetHeader.contains(header)) {
                         STREET_ID = headers.indexOf(header);
                         return search + 1;
@@ -126,7 +127,7 @@ public class Parser {
                 break;
             }
             case 2: { // case of common name
-                for(String header : headers) {
+                for (String header : headers) {
                     if (commonNameHeader.contains(header)) {
                         COMMON_NAME_ID = headers.indexOf(header);
                         return search + 1;
@@ -135,7 +136,7 @@ public class Parser {
                 break;
             }
             case 3: { // case of diameter
-                for(String header : headers) {
+                for (String header : headers) {
                     if (diameterHeader.contains(header)) {
                         DIAMETER_ID = headers.indexOf(header);
                         return search + 1;

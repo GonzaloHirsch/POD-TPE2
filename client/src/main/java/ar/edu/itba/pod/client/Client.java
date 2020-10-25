@@ -47,7 +47,7 @@ public class Client {
             // TODO: AGREGAR CODIGO POR QUERY
             // TODO: SE PUEDEN HACER FUNCIONES QUE RECIBAN LOS PARAMETROS DE ARGUMENTS Y EL CLIENTE DE HAZELCAST
             // Query to be executed
-            Optional<GenericQuery<?,?>> optionalQuery = Optional.empty();
+            Optional<GenericQuery<?, ?>> optionalQuery = Optional.empty();
             Queries chosenQuery = arguments.getQuery();
             switch (chosenQuery) {
                 case QUERY_1:
@@ -60,7 +60,7 @@ public class Client {
                     optionalQuery = Optional.of(new Query3(hz, arguments.getOutPath(), arguments.getCity(), arguments.getN()));
                     break;
                 case QUERY_4:
-                    optionalQuery = Optional.of(new Query4(hz, arguments.getOutPath(),arguments.getCity(),arguments.getSpeciesName(), arguments.getMin()));
+                    optionalQuery = Optional.of(new Query4(hz, arguments.getOutPath(), arguments.getCity(), arguments.getSpeciesName(), arguments.getMin()));
                     break;
                 case QUERY_5:
                     optionalQuery = Optional.of(new Query5(hz, arguments.getOutPath(), arguments.getCity()));
@@ -107,10 +107,11 @@ public class Client {
 
     /**
      * Parses the input files and populates the hazelcast structures with the parsed information
-     * @param hz Instance of the hazelcast client
-     * @param city City chosen to be analyzed
-     * @param inPath Path to the folder containing the input files
-     * @param query Query to be performed
+     *
+     * @param hz      Instance of the hazelcast client
+     * @param city    City chosen to be analyzed
+     * @param inPath  Path to the folder containing the input files
+     * @param query   Query to be performed
      * @param outPath Path to the file for output
      * @throws IOException if there is an error parsing the files
      */
@@ -151,11 +152,12 @@ public class Client {
 
     /**
      * Populates the List form Hazelcast using the data from the parser
-     * @param hz Hazelcast Client instance
+     *
+     * @param hz     Hazelcast Client instance
      * @param parser Parser with parsed data
-     * @param city City chosen
+     * @param city   City chosen
      */
-    private static void FillList(HazelcastInstance hz, Parser parser, Cities city){
+    private static void FillList(HazelcastInstance hz, Parser parser, Cities city) {
         // Getting the structure from hazelcast
         final IList<TreeRecord> treeRecordList = hz.getList(Constants.TREE_RECORD_LIST + city.getValue());
         // Clearing the collection just in case
@@ -166,11 +168,12 @@ public class Client {
 
     /**
      * Populates the Map form Hazelcast using the data from the parser
-     * @param hz Hazelcast Client instance
+     *
+     * @param hz     Hazelcast Client instance
      * @param parser Parser with parsed data
-     * @param city City chosen
+     * @param city   City chosen
      */
-    private static void FillMap(HazelcastInstance hz, Parser parser, Cities city){
+    private static void FillMap(HazelcastInstance hz, Parser parser, Cities city) {
         // Getting the structure from hazelcast
         final IMap<String, Long> neighbourhoodsMap = hz.getMap(Constants.NEIGHBOURHOOD_TREE_COUNT_MAP + city.getValue());
         // Clearing the collection just in case

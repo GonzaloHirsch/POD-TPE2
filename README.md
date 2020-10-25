@@ -67,7 +67,7 @@ To run the query 2, use the following command:
 To run the query 3, use the following command:
 ```
 ./query3.sh -Dcity=BUE -Daddresses='192.168.1.21:5701' -DinPath=./../../../examples/ -DoutPath=./../../../examples/result-bue-3.csv -Dn=3
-./query3.sh -Dcity=VAN -Daddresses='192.168.1.21:5701' -DinPath=./../../../examples/ -DoutPath=./../../../examples/result-van-3.csv -Dn=3
+./query3.sh -Dcity=VAN -Daddresses='192.168.1.194:5701' -DinPath=./../../../examples/ -DoutPath=./../../../examples/result-van-3.csv -Dn=3
 ```
 
 #### Query 4

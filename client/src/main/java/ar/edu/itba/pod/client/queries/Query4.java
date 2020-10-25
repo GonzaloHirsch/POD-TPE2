@@ -1,7 +1,7 @@
 package ar.edu.itba.pod.client.queries;
 
 import api.TreeRecord;
-import api.collators.Query4Collator;
+import api.collators.TreeMinimumPairCollator;
 import api.combiners.TreePerNeighbourhoodCombinerFactory;
 import api.mappers.TreePerNeighbourhoodWithTreeNameCountMapper;
 import api.reducers.TreePerNeighbourhoodReducerFactory;
@@ -33,18 +33,16 @@ public class Query4 extends GenericQuery<String, List<String>> {
     // This function transforms results' entries into strings
     private static final Function<Map.Entry<String, List<String>>, String> RESULT_TO_STRING = r -> {
         StringBuilder sb = new StringBuilder();
-        for(int i = 0;i<r.getValue().size();i++){
+        for (int i = 0; i < r.getValue().size(); i++) {
             sb.append(r.getKey()).append(";").append(r.getValue().get(i)).append("\n");
         }
         return sb.toString();
     };
 
-    public Query4(HazelcastInstance hz, String outputFile, Cities city, String treeName, int minTrees){
+    public Query4(HazelcastInstance hz, String outputFile, Cities city, String treeName, int minTrees) {
         super(hz, city, Queries.QUERY_4, outputFile, OUTPUT_HEADER, RESULT_TO_STRING);
-        //this.treeName = treeName;
+        this.treeName = treeName;
         this.minTrees = minTrees;
-        //TODO: Change this
-        this.treeName="Fraxinus pennsylvanica";
     }
 
     @Override
@@ -55,7 +53,7 @@ public class Query4 extends GenericQuery<String, List<String>> {
                 .mapper(new TreePerNeighbourhoodWithTreeNameCountMapper(this.treeName))
                 .combiner(new TreePerNeighbourhoodCombinerFactory())
                 .reducer(new TreePerNeighbourhoodReducerFactory())
-                .submit(new Query4Collator(this.minTrees));
+                .submit(new TreeMinimumPairCollator(this.minTrees));
 
     }
 }
