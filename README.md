@@ -59,8 +59,8 @@ To run the query 1, use the following command:
 #### Query 2
 To run the query 2, use the following command:
 ```
-./query2.sh -Dcity=BUE -Daddresses='192.168.1.194:5701' -DinPath=./../../../examples/ -DoutPath=./../../../examples/result-bue-2.csv
-./query2.sh -Dcity=VAN -Daddresses='192.168.1.194:5701' -DinPath=./../../../examples/ -DoutPath=./../../../examples/result-van-2.csv
+./query2.sh -Dcity=BUE -Daddresses='192.168.1.194:5701' -DinPath=./../../../examples/ -DoutPath=./../../../examples/result-bue-2.csv -Dmin=300
+./query2.sh -Dcity=VAN -Daddresses='192.168.1.194:5701' -DinPath=./../../../examples/ -DoutPath=./../../../examples/result-van-2.csv -Dmin=300
 ```
 
 #### Query 3
