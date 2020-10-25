@@ -27,12 +27,16 @@ public class TreePerStreetReducerFactory implements ReducerFactory<String, Map<S
         public void reduce(Map<String, Long> value) {
             for (Map.Entry<String, Long> entry : value.entrySet()) {
                 this.trees.putIfAbsent(entry.getKey(), 0L);
-                this.trees.put(entry.getKey(), this.trees.get(entry.getKey() + entry.getValue()));
+                this.trees.put(entry.getKey(), this.trees.get(entry.getKey()) + entry.getValue());
             }
         }
 
         @Override
         public MutablePair<String, Long> finalizeReduce() {
+            System.out.println(trees.size());
+            for(Map.Entry<String, Long> e : trees.entrySet()) {
+                System.out.println(e.getKey() + ": " + e.getValue());
+            }
             Map.Entry<String, Long> maxEntry = Collections.max(this.trees.entrySet(), Comparator.comparingLong(Map.Entry::getValue));
             return new MutablePair<>(maxEntry.getKey(), maxEntry.getValue());
         }
