@@ -30,8 +30,6 @@ public class Parser {
         String EXTENSION = ".csv";
         this.neighboursPath = inPath.concat("barrios").concat(city.name()).concat(EXTENSION);
         this.treeRecordsPath = inPath.concat("arboles").concat(city.name()).concat(EXTENSION);
-        System.out.println(neighboursPath);
-        System.out.println(treeRecordsPath);
     }
 
     /**
