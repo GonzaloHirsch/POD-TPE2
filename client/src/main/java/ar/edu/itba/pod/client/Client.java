@@ -128,14 +128,14 @@ public class Client {
 
         // Populating the structures depending on the query chosen
         switch (query) {
-            case QUERY_1:
             case QUERY_2:
             case QUERY_3:
             case QUERY_4:
+            case QUERY_5:
                 parser.parse(false, true);
                 FillList(hz, parser, city);
                 break;
-            case QUERY_5:
+            case QUERY_1:
                 parser.parse(true, true);
                 FillList(hz, parser, city);
                 FillMap(hz, parser, city);

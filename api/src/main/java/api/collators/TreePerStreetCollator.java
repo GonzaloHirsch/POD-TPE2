@@ -10,7 +10,7 @@ public class TreePerStreetCollator implements
 
     // Comparator to sort results: in this case, entries are sorted by keys by alphabetical orders
     private static final Comparator<Map.Entry<String, MutablePair<String, Long>>> ENTRY_COMPARATOR =
-            Comparator.comparing(Map.Entry::getKey);
+            Map.Entry.comparingByKey();
 
     private final long min;
 
@@ -26,7 +26,7 @@ public class TreePerStreetCollator implements
 
         // adds results to this collection
         iterable.forEach(e -> {
-            if(e.getValue().right.longValue() >= this.min) orderedResults.add(e);
+            if(e.getValue().right >= this.min) orderedResults.add(e);
         });
 
         // return results in a list

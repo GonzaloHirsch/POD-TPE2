@@ -52,15 +52,15 @@ cd client/target/ && tar -xzf tpe2-g2-client-1.0-SNAPSHOT-bin.tar.gz && cd tpe2-
 #### Query 1
 To run the query 1, use the following command:
 ```
-./query1.sh -Dcity=BUE -Daddresses='192.168.1.192:5701' -DinPath=./../../../examples/ -DoutPath=./../../../examples/result-bue-1.csv
-./query1.sh -Dcity=VAN -Daddresses='192.168.1.192:5701' -DinPath=./../../../examples/ -DoutPath=./../../../examples/result-van-1.csv
+./query1.sh -Dcity=BUE -Daddresses='192.168.1.194:5701' -DinPath=./../../../examples/ -DoutPath=./../../../examples/result-bue-1.csv
+./query1.sh -Dcity=VAN -Daddresses='192.168.1.194:5701' -DinPath=./../../../examples/ -DoutPath=./../../../examples/result-van-1.csv
 ```
 
 #### Query 2
 To run the query 2, use the following command:
 ```
-./query2.sh -Dcity=BUE -Daddresses='192.168.1.192:5701' -DinPath=./../../../examples/ -DoutPath=./../../../examples/result-bue-2.csv
-./query2.sh -Dcity=VAN -Daddresses='192.168.1.192:5701' -DinPath=./../../../examples/ -DoutPath=./../../../examples/result-van-2.csv
+./query2.sh -Dcity=BUE -Daddresses='192.168.1.194:5701' -DinPath=./../../../examples/ -DoutPath=./../../../examples/result-bue-2.csv
+./query2.sh -Dcity=VAN -Daddresses='192.168.1.194:5701' -DinPath=./../../../examples/ -DoutPath=./../../../examples/result-van-2.csv
 ```
 
 #### Query 3
