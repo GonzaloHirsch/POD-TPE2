@@ -24,7 +24,7 @@ public class Query4 extends GenericQuery<String, List<String>> {
     private final int minTrees;
 
     // Constants to be used
-    private static final String QUERY_4_JOB = "QUERY_4";
+    private static final String QUERY_4_JOB = "g2_QUERY_4";
     private static final String OUTPUT_HEADER = "Barrio A;Barrio B\n";
 
     // Comparator used to compare the Map.Entry objects with the Map-Reduce results

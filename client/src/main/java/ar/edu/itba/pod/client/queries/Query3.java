@@ -18,7 +18,7 @@ public class Query3 extends GenericQuery<String, Double> {
     private final int n;
 
     // Constants to be used
-    private static final String QUERY_3_JOB = "QUERY_3";
+    private static final String QUERY_3_JOB = "g2_QUERY_3";
     private static final String OUTPUT_HEADER = "NOMBRE_CIENTIFICO;PROMEDIO_DIAMETRO\n";
 
     private static final Function<Map.Entry<String, Double>, String> RESULT_TO_STRING =

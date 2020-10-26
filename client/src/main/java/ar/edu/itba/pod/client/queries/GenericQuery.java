@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
 
-public abstract class GenericQuery<K, V>{
+public abstract class GenericQuery<K, V> {
     // Query properties and variables
     protected HazelcastInstance hz;
     protected Cities city;
@@ -76,9 +76,10 @@ public abstract class GenericQuery<K, V>{
 
     /**
      * Generates a Map-Reduce job for the query to be executed
+     *
      * @return the ICompletableFuture object to be waited asynchronously or synchronously
      */
-    protected Job<String, TreeRecord> generateJobFromList(String queryJob){
+    protected Job<String, TreeRecord> generateJobFromList(String queryJob) {
         // Getting the job tracker
         JobTracker jobTracker = this.hz.getJobTracker(queryJob);
 
@@ -95,9 +96,10 @@ public abstract class GenericQuery<K, V>{
 
     /**
      * Generates a Map-Reduce job for the query to be executed
+     *
      * @return the ICompletableFuture object to be waited asynchronously or synchronously
      */
-    protected Job<String, Integer> generateJobFromMap(String queryJob){
+    protected Job<String, Integer> generateJobFromMap(String queryJob) {
         // Getting the job tracker
         JobTracker jobTracker = this.hz.getJobTracker(queryJob);
 
@@ -114,10 +116,11 @@ public abstract class GenericQuery<K, V>{
 
     /**
      * Given the filtered output for the query, transform it into a string to be written to the output file
+     *
      * @param results List with Map.Entry objects holding the first n results
      * @return a String with the information to be written in the output file
      */
-    private String prepareOutput(List<Map.Entry<K, V>> results){
+    private String prepareOutput(List<Map.Entry<K, V>> results) {
         // We build the string with a string builder
         StringBuilder sb = new StringBuilder();
         // Adding a header
@@ -130,8 +133,9 @@ public abstract class GenericQuery<K, V>{
 
     /**
      * Writes a given value into a filename location(can be a path)
+     *
      * @param filename path to the output file
-     * @param value value to be written to the file
+     * @param value    value to be written to the file
      */
     protected void write(String filename, String value) {
         CustomLogger.GetInstance().write(filename, value);
@@ -140,22 +144,24 @@ public abstract class GenericQuery<K, V>{
     /**
      * Logs the initial time of the mapreduce job as specified
      */
-    protected void logStartTime(){
+    protected void logStartTime() {
         CustomLogger.GetInstance().writeTimestamp(
                 this.outputFolder + "/" + this.query.get_logFilename(),
                 "Inicio del trabajo map/reduce",
                 true
         );
+        System.out.print("Inicio del trabajo map/reduce...");
     }
 
     /**
      * Logs the end time of the mapreduce job as specified
      */
-    protected void logEndTime(){
+    protected void logEndTime() {
         CustomLogger.GetInstance().writeTimestamp(
                 this.outputFolder + "/" + this.query.get_logFilename(),
                 "Fin del trabajo map/reduce",
                 true
         );
+        System.out.print(" Fin del trabajo map/reduce\n");
     }
 }

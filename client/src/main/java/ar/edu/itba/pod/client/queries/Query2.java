@@ -18,7 +18,7 @@ import java.util.function.Function;
 public class Query2 extends GenericQuery<String, MutablePair<String, Long>> {
 
     // Constants to be used
-    private static final String QUERY_2_JOB = "QUERY_2";
+    private static final String QUERY_2_JOB = "g2_QUERY_2";
     private static final String OUTPUT_HEADER = "BARRIO;CALLE_CON_MAS_ARBOLES;ARBOLES\n";
 
     // This function transforms results' entries into strings

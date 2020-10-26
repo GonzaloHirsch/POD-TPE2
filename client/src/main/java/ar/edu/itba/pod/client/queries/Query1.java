@@ -20,7 +20,7 @@ import java.util.function.Function;
 public class Query1 extends GenericQuery<String, Double> {
 
     // Constants to be used
-    private static final String QUERY_1_JOB = "QUERY_1";
+    private static final String QUERY_1_JOB = "g2_QUERY_1";
     private static final String OUTPUT_HEADER = "BARRIO;ARBOLES_POR_HABITANTE\n";
 
     // This function transforms results' entries into strings

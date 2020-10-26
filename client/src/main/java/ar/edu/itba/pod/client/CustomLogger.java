@@ -12,7 +12,7 @@ import java.time.format.DateTimeFormatter;
 public class CustomLogger {
     private static final CustomLogger INSTANCE = new CustomLogger();
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter
-            .ofPattern("dd/MM/yyyy HH:mm:ss")
+            .ofPattern("dd/MM/yyyy HH:mm:ss:SSSS")
             .withZone(ZoneId.systemDefault());
 
     private CustomLogger() {

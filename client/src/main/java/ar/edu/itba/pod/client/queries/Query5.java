@@ -22,8 +22,8 @@ import java.util.function.Function;
 public class Query5 extends GenericQuery<Integer, TreeSet<String>> {
 
     // Constants to be used
-    private static final String QUERY_5_FIRST_JOB = "FIRST_QUERY_5";
-    private static final String QUERY_5_SECOND_JOB = "SECOND_QUERY_5";
+    private static final String QUERY_5_FIRST_JOB = "g2_FIRST_QUERY_5";
+    private static final String QUERY_5_SECOND_JOB = "g2_SECOND_QUERY_5";
     private static final String OUTPUT_HEADER = "Grupo;Barrio A;Barrio B\n";
 
     // This function transforms results' entries into strings

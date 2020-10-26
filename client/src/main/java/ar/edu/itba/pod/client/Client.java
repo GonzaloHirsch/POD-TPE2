@@ -12,10 +12,7 @@ import com.hazelcast.config.GroupConfig;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IList;
 import com.hazelcast.core.IMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Optional;
@@ -69,7 +66,7 @@ public class Client {
         } catch (IOException e) {
             System.out.println("ERROR: There was a problem while parsing files");
         } catch (IllegalStateException e) {
-            System.out.println("No query chosen to be performed");
+            System.out.println("ERROR: No query chosen to be performed");
         } catch (Exception e) {
             System.out.println("ERROR: Exception in the server");
         }
@@ -98,6 +95,9 @@ public class Client {
         ClientNetworkConfig networkConfig = config.getNetworkConfig();
         memberIPs.forEach(networkConfig::addAddress);
 
+        // Setting logging information
+        config.setProperty("hazelcast.logging.type", "slf4j");
+
         return HazelcastClient.newHazelcastClient(config);
     }
 
@@ -118,6 +118,7 @@ public class Client {
                 "Inicio de la lectura del archivo",
                 false
         );
+        System.out.print("Inicio de la lectura del archivo... ");
 
         // File parsing to get both neighbours and tree records information
         Parser parser = new Parser(city, inPath);
@@ -144,6 +145,7 @@ public class Client {
                 "Fin de lectura del archivo",
                 true
         );
+        System.out.print("Fin de lectura del archivo\n");
     }
 
     /**
