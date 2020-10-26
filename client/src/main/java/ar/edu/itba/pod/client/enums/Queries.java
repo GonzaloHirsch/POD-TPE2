@@ -9,14 +9,19 @@ public enum Queries {
 
     private final int _id;
     private final String _logFilename;
+    private final String _outFilename;
 
     public String get_logFilename() {
         return _logFilename;
+    }
+    public String get_outFilename() {
+        return _outFilename;
     }
 
     Queries(int id){
         this._id = id;
         this._logFilename = "query" + this._id + ".txt";
+        this._outFilename = "query" + this._id + ".csv";
     }
 
     public static Queries FromValue(int id) throws InvalidArgumentsException {

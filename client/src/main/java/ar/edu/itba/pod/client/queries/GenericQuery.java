@@ -25,24 +25,20 @@ public abstract class GenericQuery<K, V>{
     protected HazelcastInstance hz;
     protected Cities city;
     protected Queries query;
-    protected String outputFile;
+    protected String outputFolder;
 
     // Needed for output file
     protected String outputHeader;
     protected Function<Map.Entry<K, V>, String> resultToString;
 
-    // Filepath to the output folder
-    private final String outputFolder;
-
-    public GenericQuery(HazelcastInstance hz, Cities city, Queries query, String outputFile, String outputHeader,
+    public GenericQuery(HazelcastInstance hz, Cities city, Queries query, String outputFolder, String outputHeader,
                         Function<Map.Entry<K, V>, String> resultToString) {
         this.hz = hz;
         this.city = city;
         this.query = query;
-        this.outputFile = outputFile;
+        this.outputFolder = outputFolder;
         this.outputHeader = outputHeader;
         this.resultToString = resultToString;
-        this.outputFolder = new File(this.outputFile).getParent();
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -63,7 +59,7 @@ public abstract class GenericQuery<K, V>{
         String infoForFile = this.prepareOutput(list);
 
         // Writing the results in the output file
-        this.write(this.outputFile, infoForFile);
+        this.write(this.outputFolder + "/" + this.query.get_outFilename(), infoForFile);
 
         // Logging end time of the job
         this.logEndTime();

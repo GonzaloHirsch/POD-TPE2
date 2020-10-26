@@ -43,9 +43,6 @@ public class Client {
             // Parsing the input files and populating the hazelcast structures
             ParseAndPopulateStructures(hz, arguments.getCity(), arguments.getInPath(), arguments.getQuery(), arguments.getOutPath());
 
-            // TODO: TODA LA LOGICA VA ACA
-            // TODO: AGREGAR CODIGO POR QUERY
-            // TODO: SE PUEDEN HACER FUNCIONES QUE RECIBAN LOS PARAMETROS DE ARGUMENTS Y EL CLIENTE DE HAZELCAST
             // Query to be executed
             Optional<GenericQuery<?, ?>> optionalQuery = Optional.empty();
             Queries chosenQuery = arguments.getQuery();
@@ -74,7 +71,6 @@ public class Client {
         } catch (IllegalStateException e) {
             System.out.println("No query chosen to be performed");
         } catch (Exception e) {
-            e.printStackTrace();
             System.out.println("ERROR: Exception in the server");
         }
 
@@ -118,7 +114,7 @@ public class Client {
     private static void ParseAndPopulateStructures(HazelcastInstance hz, Cities city, String inPath, Queries query, String outPath) throws IOException {
         // Logging start time of parsing
         CustomLogger.GetInstance().writeTimestamp(
-                new File(outPath).getParent() + "/" + query.get_logFilename(),
+                outPath + "/" + query.get_logFilename(),
                 "Inicio de la lectura del archivo",
                 false
         );
@@ -144,7 +140,7 @@ public class Client {
 
         // Logging end time of parsing
         CustomLogger.GetInstance().writeTimestamp(
-                new File(outPath).getParent() + "/" + query.get_logFilename(),
+                outPath + "/" + query.get_logFilename(),
                 "Fin de lectura del archivo",
                 true
         );
