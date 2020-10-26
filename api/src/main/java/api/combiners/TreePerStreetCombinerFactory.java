@@ -17,9 +17,7 @@ public class TreePerStreetCombinerFactory implements CombinerFactory<String, Str
 
         @Override
         public void combine(String street) {
-            if (!treesPerStreet.containsKey(street)) {
-                treesPerStreet.putIfAbsent(street, 0L);
-            }
+            treesPerStreet.putIfAbsent(street, 0L);
             treesPerStreet.put(street, treesPerStreet.get(street) + 1);
         }
 
