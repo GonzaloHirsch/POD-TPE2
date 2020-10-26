@@ -27,12 +27,14 @@ cd server/target/
 tar -xzf tpe2-g2-server-1.0-SNAPSHOT-bin.tar.gz
 cd tpe2-g2-server-1.0-SNAPSHOT
 chmod u+x $(ls | egrep run-)
-./run-server.sh
+./run-server.sh xx.xx.xx.*
 ```
+
+Where `xx.xx.xx.*` is the interface where the server will run, for example `192.168.1.*`
 
 The condensed command is:
 ```
-cd server/target/ && tar -xzf tpe2-g2-server-1.0-SNAPSHOT-bin.tar.gz && cd tpe2-g2-server-1.0-SNAPSHOT && chmod u+x $(ls | egrep run-) && ./run-server.sh
+cd server/target/ && tar -xzf tpe2-g2-server-1.0-SNAPSHOT-bin.tar.gz && cd tpe2-g2-server-1.0-SNAPSHOT && chmod u+x $(ls | egrep run-) && ./run-server.sh xx.xx.xx.*
 ```
 
 ### Queries
