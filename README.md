@@ -92,3 +92,15 @@ This is only for internal testing, the script to run all queries can be used lik
 chmod u+x ./run-all.sh
 ./run-all.sh -Daddresses='192.168.1.29:5701'
 ```
+
+## Authors
+
+Second Semester of 2020 - ITBA
+
+**Florencia Petrikovich** - fpetrikovich@itba.edu.ar
+
+**Gonzalo Hirsch** - ghirsch@itba.edu.ar
+
+**Marina Fuster** - mfuster@itba.edu.ar
+
+**Gastón Lifschitz** - glifschitz@itba.edu.ar
