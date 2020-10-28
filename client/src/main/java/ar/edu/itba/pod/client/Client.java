@@ -23,6 +23,7 @@ public class Client {
     private static final String PASSWORD = "nuestra_password";
 
     public static void main(String[] args) {
+        Optional<HazelcastInstance> hz = Optional.empty();
         try {
             // Creating the arguments object
             ClientArguments arguments = new ClientArguments();
@@ -35,44 +36,45 @@ public class Client {
             }
 
             // Creating an instance of the Hazelcast Client
-            final HazelcastInstance hz = GetHazelInstance(arguments.getAddresses());
+            hz = Optional.of(GetHazelInstance(arguments.getAddresses()));
 
             // Parsing the input files and populating the hazelcast structures
-            ParseAndPopulateStructures(hz, arguments.getCity(), arguments.getInPath(), arguments.getQuery(), arguments.getOutPath());
+            ParseAndPopulateStructures(hz.get(), arguments.getCity(), arguments.getInPath(), arguments.getQuery(), arguments.getOutPath());
 
             // Query to be executed
             Optional<GenericQuery<?, ?>> optionalQuery = Optional.empty();
             Queries chosenQuery = arguments.getQuery();
             switch (chosenQuery) {
                 case QUERY_1:
-                    optionalQuery = Optional.of(new Query1(hz, arguments.getOutPath(), arguments.getCity()));
+                    optionalQuery = Optional.of(new Query1(hz.get(), arguments.getOutPath(), arguments.getCity()));
                     break;
                 case QUERY_2:
-                    optionalQuery = Optional.of(new Query2(hz, arguments.getOutPath(), arguments.getCity(), arguments.getMin()));
+                    optionalQuery = Optional.of(new Query2(hz.get(), arguments.getOutPath(), arguments.getCity(), arguments.getMin()));
                     break;
                 case QUERY_3:
-                    optionalQuery = Optional.of(new Query3(hz, arguments.getOutPath(), arguments.getCity(), arguments.getN()));
+                    optionalQuery = Optional.of(new Query3(hz.get(), arguments.getOutPath(), arguments.getCity(), arguments.getN()));
                     break;
                 case QUERY_4:
-                    optionalQuery = Optional.of(new Query4(hz, arguments.getOutPath(), arguments.getCity(), arguments.getSpeciesName(), arguments.getMin()));
+                    optionalQuery = Optional.of(new Query4(hz.get(), arguments.getOutPath(), arguments.getCity(), arguments.getSpeciesName(), arguments.getMin()));
                     break;
                 case QUERY_5:
-                    optionalQuery = Optional.of(new Query5(hz, arguments.getOutPath(), arguments.getCity()));
+                    optionalQuery = Optional.of(new Query5(hz.get(), arguments.getOutPath(), arguments.getCity()));
                     break;
             }
 
             // Executing the query
             optionalQuery.orElseThrow(() -> new IllegalStateException("No query to perform")).executeQuery();
+            hz.get().shutdown();
         } catch (IOException e) {
             System.out.println("ERROR: There was a problem while parsing files");
         } catch (IllegalStateException e) {
             System.out.println("ERROR: No query chosen to be performed");
         } catch (Exception e) {
-            e.printStackTrace();
             System.out.println("ERROR: Exception in the server");
         }
 
         // Exit the program, we need this because it keeps the hazelcast connection open otherwise
+        hz.ifPresent(HazelcastInstance::shutdown);
         System.exit(0);
     }
 

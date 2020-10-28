@@ -14,7 +14,7 @@ import com.hazelcast.mapreduce.JobTracker;
 import com.hazelcast.mapreduce.KeyValueSource;
 import org.apache.commons.lang3.NotImplementedException;
 
-import java.io.File;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
