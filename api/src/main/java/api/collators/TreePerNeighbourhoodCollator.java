@@ -19,7 +19,7 @@ public class TreePerNeighbourhoodCollator implements
 
     private final Map<String, Long> neighbourhoods;
 
-    public TreePerNeighbourhoodCollator(Map<String, Long> neighbourhoods){
+    public TreePerNeighbourhoodCollator(Map<String, Long> neighbourhoods) {
         this.neighbourhoods = neighbourhoods;
     }
 
@@ -31,9 +31,12 @@ public class TreePerNeighbourhoodCollator implements
         Map<String, Double> avgTreePerPerson = new HashMap<>();
 
         // adds results to this collection
-        iterable.forEach( r -> {
-                double avg = round(((double)r.getValue())/neighbourhoods.get(r.getKey()), 2);
-            avgTreePerPerson.put(r.getKey(), avg); } );
+        iterable.forEach(r -> {
+            if (this.neighbourhoods.containsKey(r.getKey())) {
+                double avg = round(((double) r.getValue()) / neighbourhoods.get(r.getKey()), 2);
+                avgTreePerPerson.put(r.getKey(), avg);
+            }
+        });
 
         // Adds avg trees per person in order for records to be sorted
         orderedResults.addAll(avgTreePerPerson.entrySet());
@@ -43,13 +46,12 @@ public class TreePerNeighbourhoodCollator implements
     }
 
     /**
-     *
      * @param val originl double value
-     * @param n how many decimals we want to keep
+     * @param n   how many decimals we want to keep
      * @return double with n decimals
      */
     private double round(double val, int n) {
-        if(n < 0) throw new IllegalArgumentException();
+        if (n < 0) throw new IllegalArgumentException();
 
         BigDecimal bigDecimal = new BigDecimal(val);
         bigDecimal = bigDecimal.setScale(n, RoundingMode.HALF_UP);
