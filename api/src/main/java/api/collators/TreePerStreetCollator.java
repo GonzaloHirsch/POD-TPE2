@@ -12,9 +12,11 @@ public class TreePerStreetCollator implements
     private static final Comparator<Map.Entry<String, MutablePair<String, Long>>> ENTRY_COMPARATOR =
             Map.Entry.comparingByKey();
 
+    private final Map<String, Long> neighbourhoods;
     private final long min;
 
-    public TreePerStreetCollator(long min) {
+    public TreePerStreetCollator(Map<String, Long> neighbourhoods, long min) {
+        this.neighbourhoods = neighbourhoods;
         this.min = min;
     }
 
@@ -26,7 +28,7 @@ public class TreePerStreetCollator implements
 
         // adds results to this collection
         iterable.forEach(e -> {
-            if(e.getValue().right >= this.min) orderedResults.add(e);
+            if(this.neighbourhoods.containsKey(e.getKey()) && e.getValue().right >= this.min) orderedResults.add(e);
         });
 
         // return results in a list

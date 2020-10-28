@@ -68,6 +68,7 @@ public class Client {
         } catch (IllegalStateException e) {
             System.out.println("ERROR: No query chosen to be performed");
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("ERROR: Exception in the server");
         }
 
@@ -125,17 +126,17 @@ public class Client {
 
         // Populating the structures depending on the query chosen
         switch (query) {
+            case QUERY_1:
             case QUERY_2:
+                parser.parse(true, true);
+                FillList(hz, parser, city);
+                FillMap(hz, parser, city);
+                break;
             case QUERY_3:
             case QUERY_4:
             case QUERY_5:
                 parser.parse(false, true);
                 FillList(hz, parser, city);
-                break;
-            case QUERY_1:
-                parser.parse(true, true);
-                FillList(hz, parser, city);
-                FillMap(hz, parser, city);
                 break;
         }
 

@@ -5,6 +5,7 @@ import api.collators.TreePerStreetCollator;
 import api.combiners.TreePerStreetCombinerFactory;
 import api.mappers.TreePerStreetMapper;
 import api.reducers.TreePerStreetReducerFactory;
+import ar.edu.itba.pod.client.Constants;
 import ar.edu.itba.pod.client.enums.Cities;
 import ar.edu.itba.pod.client.enums.Queries;
 import com.hazelcast.core.HazelcastInstance;
@@ -46,6 +47,6 @@ public class Query2 extends GenericQuery<String, MutablePair<String, Long>> {
                 .mapper(new TreePerStreetMapper())
                 .combiner(new TreePerStreetCombinerFactory())
                 .reducer(new TreePerStreetReducerFactory())
-                .submit(new TreePerStreetCollator(min));
+                .submit(new TreePerStreetCollator(hz.getMap(Constants.NEIGHBOURHOOD_TREE_COUNT_MAP + this.city.getValue()), min));
     }
 }
