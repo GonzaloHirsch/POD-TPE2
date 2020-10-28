@@ -20,7 +20,7 @@ public enum Queries {
 
     Queries(int id){
         this._id = id;
-        this._logFilename = "query" + this._id + ".txt";
+        this._logFilename = "time" + this._id + ".txt";
         this._outFilename = "query" + this._id + ".csv";
     }
 
